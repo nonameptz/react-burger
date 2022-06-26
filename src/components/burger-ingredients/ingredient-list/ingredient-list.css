@@ -1,0 +1,5 @@
+.burger-ingredients-section {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}

@@ -1,0 +1,7 @@
+.constructor-list {
+    max-height: 464px;
+    width: 552px;
+    overflow-y: scroll;
+    flex-direction: column;
+    gap: 10px;
+}

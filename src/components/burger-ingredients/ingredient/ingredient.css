@@ -1,0 +1,16 @@
+.ingredient {
+    flex-direction: column;
+    text-align: center;
+    width: 48%;
+}
+
+.ingredient-image {
+    width: 240px;
+    height: 120px;
+    margin: 0 auto;
+}
+
+.ingredient-price {
+    flex-direction: row;
+    justify-content: center;
+}
