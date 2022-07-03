@@ -5,14 +5,14 @@ import {
   ProfileIcon,
   Logo
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import './app-header.css';
+import appHeaderStyles from './app-header.module.css';
 import NavButton from "./nav-button/nav-button";
 
 class AppHeader extends React.Component {
   render() {
     return (
-      <div className='header p-4'>
-        <nav className='width33'>
+      <header className={`${appHeaderStyles.header} p-4`}>
+        <nav className={appHeaderStyles.width33}>
           <NavButton
             title='Конструктор'
             isActive={true}
@@ -23,16 +23,16 @@ class AppHeader extends React.Component {
             icon={(<ListIcon type="secondary" />)}
           />
         </nav>
-        <div className='width33 justify-center'>
+        <div className={`${appHeaderStyles.width33} ${appHeaderStyles.justifyCenter}`}>
           <Logo />
         </div>
-        <div className='width33 justify-end'>
+        <div className={`${appHeaderStyles.width33} ${appHeaderStyles.justifyEnd}`}>
           <NavButton
             title='Личный кабинет'
             icon={(<ProfileIcon type="secondary" />)}
           />
         </div>
-      </div>
+      </header>
     );
   }
 }

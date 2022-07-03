@@ -4,13 +4,13 @@
     width: 48%;
 }
 
-.ingredient-image {
+.ingredientImage {
     width: 240px;
     height: 120px;
     margin: 0 auto;
 }
 
-.ingredient-price {
+.ingredientPrice {
     flex-direction: row;
     justify-content: center;
 }

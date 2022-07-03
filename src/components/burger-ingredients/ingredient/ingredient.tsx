@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react";
-import './ingredient.css';
+import ingredientStyles from './ingredient.module.css';
 import {CurrencyIcon} from "@ya.praktikum/react-developer-burger-ui-components";
 
 interface IngredientProps {
@@ -11,9 +11,9 @@ interface IngredientProps {
 
 const Ingredient: FunctionComponent<IngredientProps> = ({name, image, price, index}) => {
   return (
-    <div className={`flex ingredient mb-10 ${index % 2 === 0 ? 'mr-6' : ''}`}>
-      <img src={image} className='ingredient-image' />
-      <div className='mt-1 flex ingredient-price'>
+    <div className={`flex ${ingredientStyles.ingredient} mb-10 ${index % 2 === 0 ? 'mr-6' : ''}`}>
+      <img src={image} className={ingredientStyles.ingredientImage} />
+      <div className={`mt-1 flex ${ingredientStyles.ingredientPrice}`}>
         <p className="text text_type_digits-default">{price}</p>
         <CurrencyIcon type="primary" />
       </div>

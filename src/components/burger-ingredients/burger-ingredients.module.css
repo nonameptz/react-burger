@@ -1,7 +1,7 @@
-.burger-ingredients-container {
+.burgerIngredientsContainer {
     width: auto;
 }
-.burger-ingredients-main-list {
+.burgerIngredientsMainList {
     width: 608px;
     height: 716px;
     overflow-y: scroll;

@@ -1,12 +1,12 @@
 import React  from "react";
-import './ingredient-list.css';
+import ingredientListStyles from './ingredient-list.module.css';
 import Ingredient from "../ingredient/ingredient";
 
 const IngredientList = ({title, list}) => {
   return (
     <>
-      <h3 style={{ marginTop: 0 }} className='mb-6'>{title}</h3>
-      <section className='flex burger-ingredients-section'>
+      <h3 className={`mb-6 ${ingredientListStyles.burgerIngredientsTitle}`}>{title}</h3>
+      <section className={`flex ${ingredientListStyles.burgerIngredientsSection}`}>
         {list.map((ing, index) =>
           (<Ingredient name={ing.name}
                        image={ing.image}

@@ -1,0 +1,22 @@
+.burgerConstructor {
+    flex-direction: column;
+    gap: 10px;
+    height: fit-content;
+}
+.constructorList {
+    max-height: 464px;
+    width: 576px;
+    overflow-y: scroll;
+    flex-direction: column;
+    gap: 10px;
+}
+.constructorElement {
+    align-items: center;
+}
+.burgerConstructorFooter {
+    flex-direction: row;
+    justify-content: end;
+}
+.burgerConstructorTotal {
+    margin: auto 40px auto;
+}

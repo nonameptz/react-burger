@@ -1,4 +1,7 @@
-.burger-ingredients-section {
+.burgerIngredientsTitle {
+    margin-top: 0
+}
+.burgerIngredientsSection {
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-between;

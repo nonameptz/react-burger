@@ -1,0 +1,13 @@
+.app {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+.mainContent {
+    width: 100%;
+    justify-content: center;
+    display: flex;
+}

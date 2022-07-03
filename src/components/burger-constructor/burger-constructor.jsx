@@ -2,17 +2,23 @@ import React from 'react';
 import {
   Button,
   ConstructorElement,
-  CurrencyIcon
+  CurrencyIcon, DragIcon
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import './burger-constructor.css';
+import burgerConstructorStyles from './burger-constructor.module.css';
+
+/**
+ * Нет типизации по той причине, что как только я меняю файл на *.tsx получаю
+ * такую ошибку (компонент Button):
+ * https://practicum-students.slack.com/archives/C03KGRWCU64/p1656087733647409
+ * Anna Chernoskutova в треде сказала чтобы я использовал jsx тут.
+ */
+
 class BurgerConstructor extends React.Component {
   render() {
     const img = 'https://code.s3.yandex.net/react/code/bun-02.png';
     let totalPrice = 0;
     return (
-      <section
-        className='mt-25 mb-10 ml-10 pl-4 pr-4'
-        style={{ display: 'flex', flexDirection: 'column', gap: '10px', height: 'fit-content' }}>
+      <section className={`mt-25 mb-10 ml-10 pl-4 pr-4 flex ${burgerConstructorStyles.burgerConstructor}`}>
         <div className='ml-8'>
           <ConstructorElement
             type="top"
@@ -22,15 +28,20 @@ class BurgerConstructor extends React.Component {
             thumbnail={img}
           />
         </div>
-        <div className='ml-8 flex constructor-list scroll'>
+        <div className={`flex ${burgerConstructorStyles.constructorList} scroll`}>
           {this.props.constructor.map(element => {
             totalPrice +=element.price;
-            return (<ConstructorElement
-              key={element._id}
-              text={element.name}
-              price={element.price}
-              thumbnail={element.image_mobile}
-            />)
+            return (
+              <div className={`flex pl-2 ${burgerConstructorStyles.constructorElement}`}>
+                <DragIcon type="primary" />
+                <ConstructorElement
+                  key={element._id}
+                  text={element.name}
+                  price={element.price}
+                  thumbnail={element.image_mobile}
+                />
+              </div>
+            );
           }
           )}
         </div>
@@ -43,8 +54,8 @@ class BurgerConstructor extends React.Component {
             thumbnail={img}
           />
         </div>
-        <div className='mt-10 pr-4 flex' style={{flexDirection: 'row', justifyContent: 'end'}}>
-          <p className="text text_type_digits-medium" style={{ margin: 'auto 40px auto'}}>
+        <div className={`mt-10 pr-4 flex ${burgerConstructorStyles.burgerConstructorFooter}`}>
+          <p className={`text text_type_digits-medium ${burgerConstructorStyles.burgerConstructorTotal}`}>
             {(200 + totalPrice + 200)}
             <CurrencyIcon type="primary" />
           </p>
