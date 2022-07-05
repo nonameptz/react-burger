@@ -2,13 +2,7 @@ import React from 'react';
 import burgerIngredientsStyles from './burger-ingredients.module.css';
 import {Tab} from "@ya.praktikum/react-developer-burger-ui-components";
 import IngredientList from "./ingredient-list/ingredient-list";
-
-/**
- * Нет типизации по той причине, что как только я меняю файл на *.tsx получаю
- * такую ошибку (компонент Tab):
- * https://practicum-students.slack.com/archives/C03KGRWCU64/p1656087733647409
- * Anna Chernoskutova в треде сказала чтобы я использовал jsx тут.
- */
+import PropTypes from "prop-types";
 
 const BurgerIngredients = ({buns, mains, sauces}) => {
   const [current, setCurrent] = React.useState('one')
@@ -31,4 +25,11 @@ const BurgerIngredients = ({buns, mains, sauces}) => {
     </section>
   );
 }
+
+BurgerIngredients.propTypes = {
+  buns: PropTypes.array,
+  mains: PropTypes.array,
+  sauces: PropTypes.array
+};
+
 export default BurgerIngredients;

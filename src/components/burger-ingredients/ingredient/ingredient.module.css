@@ -2,6 +2,7 @@
     flex-direction: column;
     text-align: center;
     width: 48%;
+    cursor: pointer;
 }
 
 .ingredientImage {

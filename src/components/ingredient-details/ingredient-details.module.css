@@ -1,0 +1,13 @@
+.order {
+    flex-direction: column;
+    align-items: center;
+}
+
+.consist {
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.box {
+    text-align: center;
+}
