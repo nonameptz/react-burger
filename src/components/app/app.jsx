@@ -20,7 +20,7 @@ const App = () => {
         setBuns(data.filter(food => food.type === 'bun'));
         setMains(data.filter(food => food.type === 'main'));
         setSauces(data.filter(food => food.type === 'sauce'));
-        setConstructorData(data.slice(1, 7));
+        setConstructorData(data.slice(2, 9).sort(() => 0.5 - Math.random())); //shuffle for fun
       })
       .catch(error => {
         setError(error);

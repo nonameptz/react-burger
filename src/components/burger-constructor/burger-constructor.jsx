@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import PropTypes from "prop-types";
+import {arrayOf} from "prop-types";
 import {
   Button,
   ConstructorElement,
@@ -8,6 +8,7 @@ import {
 import burgerConstructorStyles from './burger-constructor.module.css';
 import Modal from "../modal/modal";
 import OrderDetails from "../order-details/order-details";
+import {ingredientType} from "../../utils/types";
 
 const BurgerConstructor = ({ constructor }) => {
   const img = 'https://code.s3.yandex.net/react/code/bun-02.png';
@@ -80,7 +81,7 @@ const BurgerConstructor = ({ constructor }) => {
 }
 
 BurgerConstructor.propTypes = {
-  constructor: PropTypes.array
+  constructor: arrayOf(ingredientType).isRequired
 };
 
 export default BurgerConstructor;

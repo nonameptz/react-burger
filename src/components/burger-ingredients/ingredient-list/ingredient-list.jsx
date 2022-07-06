@@ -3,11 +3,21 @@ import ingredientListStyles from './ingredient-list.module.css';
 import Ingredient from "../ingredient/ingredient";
 import Modal from "../../modal/modal";
 import IngredientDetails from "../../ingredient-details/ingredient-details";
-import PropTypes from "prop-types";
+import {string, arrayOf} from "prop-types";
+import {ingredientType} from "../../../utils/types";
 
 const IngredientList = ({title, list}) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [activeIngredient, setActiveIngredient] = useState({});
+  const [activeIngredient, setActiveIngredient] = useState({
+    image_mobile: '',
+    image_large: '',
+    name: '',
+    price: 0,
+    calories: 0,
+    proteins: 0,
+    fat: 0,
+    carbohydrates: 0,
+  });
 
   const onIngredientClick = (index) => {
     setModalVisible(true);
@@ -45,8 +55,8 @@ const IngredientList = ({title, list}) => {
 }
 
 IngredientList.propTypes = {
-  title: PropTypes.string,
-  list: PropTypes.array
+  title: string.isRequired,
+  list: arrayOf(ingredientType).isRequired,
 };
 
 export default IngredientList;
