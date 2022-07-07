@@ -1,0 +1,19 @@
+.width33 {
+    display: flex;
+    width: 33%;
+}
+
+.header {
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+    display: flex;
+}
+
+.justifyCenter {
+    justify-content: center;
+}
+
+.justifyEnd {
+    justify-content: end;
+}

@@ -5,9 +5,42 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #1C1C21; /*TODO will be moved to const (?)*/
+  color: #F2F2F3;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.show {
+  display: block !important;
+}
+
+#react-modals {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1050;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+}
+
+.flex {
+  display: flex;
+}
+
+.scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scroll::-webkit-scrollbar-track {
+  background-color: #2F2F37;
+}
+
+.scroll::-webkit-scrollbar-thumb {
+  background-color: #8585AD;
 }
