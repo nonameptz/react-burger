@@ -1,12 +1,12 @@
-import React from 'react';
+import { useState, useContext} from 'react';
 import burgerIngredientsStyles from './burger-ingredients.module.css';
 import {Tab} from "@ya.praktikum/react-developer-burger-ui-components";
 import IngredientList from "./ingredient-list/ingredient-list";
-import { arrayOf } from "prop-types";
-import { ingredientType } from '../../utils/types'
+import IngredientContext from '../../services/ingredientContext';
 
-const BurgerIngredients = ({buns, mains, sauces}) => {
-  const [current, setCurrent] = React.useState('one')
+const BurgerIngredients = () => {
+  const {ingredients} = useContext(IngredientContext);
+  const [current, setCurrent] = useState('one')
   return (
     <section className={`${burgerIngredientsStyles.burgerIngredientsContainer} pt-10`}>
       <h2 className='text text_type_main-large mb-5'>Собереите бургер</h2>
@@ -19,18 +19,12 @@ const BurgerIngredients = ({buns, mains, sauces}) => {
              onClick={setCurrent}>Начинки</Tab>
       </div>
       <div className={`${burgerIngredientsStyles.burgerIngredientsMainList} scroll`}>
-        <IngredientList title='Булки' list={buns} />
-        <IngredientList title='Соусы' list={sauces} />
-        <IngredientList title='Начинки' list={mains} />
+        <IngredientList title='Булки' list={ingredients.buns} />
+        <IngredientList title='Соусы' list={ingredients.sauces} />
+        <IngredientList title='Начинки' list={ingredients.mains} />
       </div>
     </section>
   );
 }
-
-BurgerIngredients.propTypes = {
-  buns: arrayOf(ingredientType).isRequired,
-  mains: arrayOf(ingredientType).isRequired,
-  sauces: arrayOf(ingredientType).isRequired
-};
 
 export default BurgerIngredients;
