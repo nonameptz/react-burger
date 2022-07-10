@@ -5,6 +5,7 @@ import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 import IngredientContext from '../../services/ingredientContext';
 import API_DOMAIN from "../../constants/apiConstant";
+import checkResponse from "../../utils/checkResponse";
 
 const App = () => {
   const [ingredients, setIngredients] = useState({buns: [], mains: [], sauces: []});
@@ -12,7 +13,7 @@ const App = () => {
 
   useEffect(() => {
     fetch(`${API_DOMAIN}api/ingredients`)
-      .then((data) => data.json())
+      .then(checkResponse)
       .then(({data}) => {
         setIngredients({
           buns: data.filter(food => food.type === 'bun'),

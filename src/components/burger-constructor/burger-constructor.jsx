@@ -1,5 +1,4 @@
 import React, {useState, useReducer, useContext, useEffect} from 'react';
-import {arrayOf} from "prop-types";
 import {
   Button,
   ConstructorElement,
@@ -11,6 +10,7 @@ import OrderDetails from "../order-details/order-details";
 import IngredientContext from "../../services/ingredientContext";
 import ConstructorContext from "../../services/constructorContext";
 import API_DOMAIN from "../../constants/apiConstant";
+import checkResponse from "../../utils/checkResponse";
 
 const BurgerConstructor = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -60,7 +60,7 @@ const BurgerConstructor = () => {
       },
       body: JSON.stringify({ingredients})
     })
-      .then((data) => data.json())
+      .then(checkResponse)
       .then(data => dispatch({type: "set_order", payload: data.order.number}))
       .catch(error => {
         console.error('there was an error', error);
@@ -87,7 +87,7 @@ const BurgerConstructor = () => {
             <ConstructorElement
               type="top"
               isLocked={constructor.bun.is_locked}
-              text={constructor.bun.name}
+              text={`${constructor.bun.name} (верх)`}
               price={constructor.bun.price}
               thumbnail={constructor.bun.image_mobile}
             />
@@ -111,7 +111,7 @@ const BurgerConstructor = () => {
             <ConstructorElement
               type="bottom"
               isLocked={constructor.bun.is_locked}
-              text={constructor.bun.name}
+              text={`${constructor.bun.name} (низ)`}
               price={constructor.bun.price}
               thumbnail={constructor.bun.image_mobile}
             />

@@ -7,8 +7,7 @@ import {string, arrayOf} from "prop-types";
 import {ingredientType} from "../../../utils/types";
 
 const IngredientList = ({title, list}) => {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [activeIngredient, setActiveIngredient] = useState({
+  const initActiveState = {
     image_mobile: '',
     image_large: '',
     name: '',
@@ -17,7 +16,9 @@ const IngredientList = ({title, list}) => {
     proteins: 0,
     fat: 0,
     carbohydrates: 0,
-  });
+  };
+  const [modalVisible, setModalVisible] = useState(false);
+  const [activeIngredient, setActiveIngredient] = useState(initActiveState);
 
   const onIngredientClick = (index) => {
     setModalVisible(true);
@@ -26,7 +27,7 @@ const IngredientList = ({title, list}) => {
 
   const onCloseModal = () => {
     setModalVisible(false);
-    setActiveIngredient({});
+    setActiveIngredient(initActiveState);
   }
 
   const modal = (
