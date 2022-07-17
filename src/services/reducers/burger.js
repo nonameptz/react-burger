@@ -1,13 +1,15 @@
 import {createSlice, createAsyncThunk} from "@reduxjs/toolkit";
 import API_DOMAIN from "../../constants/apiConstant";
-import { initialState, initSelectedIngredientState } from '../../utils/initStates'
+import { initialState, initSelectedIngredientState } from '../../utils/initStates';
+import { v4 as uuidv4 } from 'uuid';
+import checkResponse from '../../utils/checkResponse';
 
 export const fetchBurgers = createAsyncThunk(
   'burger/fetch',
   async (_, thunkApi) => {
     try {
       const response = await fetch(`${API_DOMAIN}api/ingredients`);
-      const {data} = await response.json();
+      const {data} = await checkResponse(response);
       return {
         buns: data.filter(food => food.type === 'bun'),
         mains: data.filter(food => food.type === 'main'),
@@ -15,7 +17,7 @@ export const fetchBurgers = createAsyncThunk(
       };
     } catch (error) {
       thunkApi.rejectWithValue({
-        message: 'Failed to fetch burgers :('
+        message: 'Ошибка загрузки ингредиентов. Текст ошибки: ' + error
       })
     }
   }
@@ -32,11 +34,11 @@ export const setOrder = createAsyncThunk(
         },
         body: JSON.stringify({ingredients})
       });
-      const data = await response.json();
+      const data = await checkResponse(response);
       return data.order.number;
     } catch (error) {
       thunkApi.rejectWithValue({
-        message: 'Failed to fetch burgers :('
+        message: 'Ошибка отправки заказа. Попробуйте снова.'
       })
     }
   }
@@ -80,7 +82,10 @@ export const burgerSlice = createSlice({
         [...state.ingredients.sauces, ...state.ingredients.mains],
         action.payload._id
       );
-      state.constructorList.push(action.payload);
+      state.constructorList.push({
+        ...action.payload,
+        uuid: uuidv4(),
+      });
     },
     removeIngredient: (state, action) => {
       state.totalPrice -= state.constructorList[action.payload].price;
@@ -123,10 +128,27 @@ export const burgerSlice = createSlice({
     })
 
     builder
+      .addCase(setOrder.pending, (state, action) => {
+        state.orderLoading = true;
+        state.orderErrorMsg = '';
+      })
       .addCase(setOrder.fulfilled, (state, action) => {
+        state.orderLoading = false;
         state.orderNum = action.payload;
+        state.constructorList = initialState.constructorList;
+        state.constructorBun = initialState.constructorBun;
+        state.totalPrice = 0;
+        [
+          ...state.ingredients.buns,
+          ...state.ingredients.sauces,
+          ...state.ingredients.mains
+        ].map(ingredient => {
+          ingredient.counter = 0;
+          return ingredient;
+        });
       })
       .addCase(setOrder.rejected, (state, action) => {
+        state.orderLoading = false;
         state.orderNum = null;
         if (action.payload) {
           state.orderErrorMsg = action.payload;

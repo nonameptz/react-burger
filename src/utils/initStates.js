@@ -17,6 +17,7 @@ export const initialState = {
   totalPrice: 0,
   //order
   orderNum: null,
+  orderLoading: false,
   orderErrorMsg: '',
 };
 

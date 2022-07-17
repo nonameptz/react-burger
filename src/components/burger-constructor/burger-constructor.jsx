@@ -14,17 +14,16 @@ import SortableConstructorElement from "./sortable-constructor-element";
 
 const BurgerConstructor = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const { ingredients, constructorList, constructorBun, totalPrice } = useSelector(store => store.burger);
+  const {
+    ingredients,
+    constructorList,
+    constructorBun,
+    totalPrice,
+    orderLoading
+  } = useSelector(store => store.burger);
   const dispatch = useDispatch();
 
-  const [, dropBunTopTarget] = useDrop({
-    accept: 'buns',
-    drop({index, type}) {
-      dispatch(addBun(ingredients[type][index]));
-    },
-  });
-
-  const [, dropBunBottomTarget] = useDrop({
+  const [, dropBunTarget] = useDrop({
     accept: 'buns',
     drop({index, type}) {
       dispatch(addBun(ingredients[type][index]));
@@ -37,12 +36,6 @@ const BurgerConstructor = () => {
       dispatch(addIngredient(ingredients[type][index]));
     },
   });
-
-  useEffect(() => {
-    if (ingredients.buns.length && constructorList.length === 0) {
-      dispatch(addBun(ingredients.buns[0]))
-    }
-  }, []);
 
   const onDelete = (index) => {
     dispatch(removeIngredient(index));
@@ -65,58 +58,68 @@ const BurgerConstructor = () => {
     </Modal>
   );
 
+  const getMissedText = () => {
+    let output = [];
+    if (!constructorBun.name) {
+      output.push('булку');
+    }
+    if (!constructorList.length) {
+      output.push('ингредиенты');
+    }
+    return output.join(' и ');
+  }
+
   return (
     <section className={`mt-25 mb-10 ml-10 pl-4 pr-4 flex ${burgerConstructorStyles.burgerConstructor}`}>
-      {constructorList && constructorBun.name &&
-        (<>
-          <div className='ml-8'
-               ref={dropBunTopTarget}>
-            <ConstructorElement
-              type="top"
-              isLocked
-              text={`${constructorBun.name} (верх)`}
-              price={constructorBun.price}
-              thumbnail={constructorBun.image_mobile}
-            />
-          </div>
-          <div className={`flex ${burgerConstructorStyles.constructorList} scroll`}
-               ref={dropIngredientTarget}>
-            {constructorList.map((element, index) => {
-              return (
-                <SortableConstructorElement
-                  element={element}
-                  index={index}
-                  onDelete={() => onDelete(index)}
-                  key={element._id + '-' + index}
-                />
+      <div ref={dropBunTarget}>
+        <div ref={dropIngredientTarget}>
+            <div className='ml-8'>
+              {constructorBun.name && (<ConstructorElement
+                type="top"
+                isLocked
+                text={`${constructorBun.name} (верх)`}
+                price={constructorBun.price}
+                thumbnail={constructorBun.image_mobile}
+              />)}
+            </div>
+            <div className={`flex ${burgerConstructorStyles.constructorList} scroll mt-3 mb-3`}>
+              {constructorList.map((element, index) => {
+                return (
+                  <SortableConstructorElement
+                    element={element}
+                    index={index}
+                    onDelete={() => onDelete(index)}
+                    key={element.uuid}
+                  />
+                )}
               )}
+            </div>
+            {(!constructorBun.name || !constructorList.length) && (
+              <div className='text text_type_main-small ml-15 mt-4 mb-7'>
+                Пожалуйста, перенесите сюда {getMissedText()} для создания заказа.
+              </div>
             )}
-            {!constructorList.length && (
-              <span className='text text_type_main-small ml-15 mt-7 mb-7'>Перетащите сюда ингредиенты, просто булку есть вредно!</span>
-            )}
+            <div className='ml-8'>
+              {constructorBun.name && (<ConstructorElement
+                type="bottom"
+                isLocked
+                text={`${constructorBun.name} (низ)`}
+                price={constructorBun.price}
+                thumbnail={constructorBun.image_mobile}
+              />)}
+            </div>
           </div>
-          <div className='ml-8'
-               ref={dropBunBottomTarget}>
-            <ConstructorElement
-              type="bottom"
-              isLocked
-              text={`${constructorBun.name} (низ)`}
-              price={constructorBun.price}
-              thumbnail={constructorBun.image_mobile}
-            />
-          </div>
-        </>
-      )}
+        </div>
         <div className={`mt-10 pr-4 flex ${burgerConstructorStyles.burgerConstructorFooter}`}>
           <p className={`text text_type_digits-medium ${burgerConstructorStyles.burgerConstructorTotal}`}>
             {totalPrice}
             <CurrencyIcon type="primary" />
           </p>
-          <Button type="primary" size="large" onClick={onOrderClick}>
-            Оформить заказ
+          <Button type="primary" size="large" onClick={onOrderClick} disabled={(!constructorBun.name || orderLoading)}>
+            {orderLoading ? 'Оформляем...' : 'Оформить заказ'}
           </Button>
         </div>
-        {isModalVisible && modal}
+        {isModalVisible && !orderLoading && modal}
     </section>
   );
 }
