@@ -1,8 +1,14 @@
 import React, {FunctionComponent, MouseEventHandler} from "react";
 import ingredientStyles from './ingredient.module.css';
-import {CurrencyIcon} from "@ya.praktikum/react-developer-burger-ui-components";
+import {
+  Counter,
+  CurrencyIcon
+} from "@ya.praktikum/react-developer-burger-ui-components";
+import { useDrag } from "react-dnd";
 
 interface IngredientProps {
+  type: string,
+  counter: number,
   name: string,
   image: string,
   price: number,
@@ -11,12 +17,18 @@ interface IngredientProps {
 }
 
 const Ingredient: FunctionComponent<IngredientProps> = (
-  {name, image, price, index, onClick}
+  {type, counter, name, image, price, index, onClick}
   ) => {
+  const [, dragRef] = useDrag({
+    type,
+    item: {index, type}
+  });
   return (
     <div className={`flex ${ingredientStyles.ingredient} mb-10 ${index % 2 === 0 ? 'mr-6' : ''}`}
+         ref={dragRef}
          onClick={onClick}>
-      <img src={image} className={ingredientStyles.ingredientImage} />
+      {counter > 0 && (<Counter count={counter} size="default" />)}
+      <img src={image} alt={name} className={ingredientStyles.ingredientImage} />
       <div className={`mt-1 flex ${ingredientStyles.ingredientPrice}`}>
         <p className="text text_type_digits-default">{price}</p>
         <CurrencyIcon type="primary" />
