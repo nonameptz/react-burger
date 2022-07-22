@@ -5,33 +5,26 @@ import Modal from "../../modal/modal";
 import IngredientDetails from "../../ingredient-details/ingredient-details";
 import {string, arrayOf} from "prop-types";
 import {ingredientType} from "../../../utils/types";
+import { selectIngredient, unselectIngredient } from '../../../services/reducers/burger';
+import {useDispatch} from "react-redux";
 
-const IngredientList = ({title, list}) => {
+const IngredientList = ({title, list, type}) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [activeIngredient, setActiveIngredient] = useState({
-    image_mobile: '',
-    image_large: '',
-    name: '',
-    price: 0,
-    calories: 0,
-    proteins: 0,
-    fat: 0,
-    carbohydrates: 0,
-  });
+  const dispatch = useDispatch();
 
-  const onIngredientClick = (index) => {
+  const onIngredientClick = (ingredient) => {
     setModalVisible(true);
-    setActiveIngredient(list[index]);
+    dispatch(selectIngredient(ingredient))
   }
 
   const onCloseModal = () => {
     setModalVisible(false);
-    setActiveIngredient({});
+    dispatch(unselectIngredient())
   }
 
   const modal = (
     <Modal header='Детали ингредиента' onClose={onCloseModal}>
-      <IngredientDetails ingredient={activeIngredient} />
+      <IngredientDetails />
     </Modal>
   );
 
@@ -39,13 +32,15 @@ const IngredientList = ({title, list}) => {
     <>
       <h3 className={`mb-6 ${ingredientListStyles.burgerIngredientsTitle}`}>{title}</h3>
       <section className={`flex ${ingredientListStyles.burgerIngredientsSection}`}>
-        {list.map((ing, index) =>
-          (<Ingredient name={ing.name}
-                       image={ing.image}
-                       price={ing.price}
-                       key={ing._id}
+        {list.map((ingredient, index) =>
+          (<Ingredient type={type}
+                       counter={ingredient.counter}
+                       name={ingredient.name}
+                       image={ingredient.image}
+                       price={ingredient.price}
+                       key={ingredient._id}
                        index={index}
-                       onClick={() => onIngredientClick(index)}
+                       onClick={() => onIngredientClick(ingredient)}
           />)
         )}
         {modalVisible && modal}
@@ -56,6 +51,7 @@ const IngredientList = ({title, list}) => {
 
 IngredientList.propTypes = {
   title: string.isRequired,
+  type: string.isRequired,
   list: arrayOf(ingredientType).isRequired,
 };
 

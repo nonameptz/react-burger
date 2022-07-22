@@ -3,6 +3,7 @@
     text-align: center;
     width: 48%;
     cursor: pointer;
+    position: relative;
 }
 
 .ingredientImage {

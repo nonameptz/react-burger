@@ -1,47 +1,39 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect} from 'react';
 import appStyles from './app.module.css';
 import AppHeader from '../app-header/app-header';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
-
-const API_DOMAIN = 'https://norma.nomoreparties.space/';
+import { fetchBurgers } from '../../services/reducers/burger';
+import {useDispatch, useSelector} from "react-redux";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 const App = () => {
-  const [buns, setBuns] = useState([]);
-  const [mains, setMains] = useState([]);
-  const [sauces, setSauces] = useState([]);
-  const [constructorData, setConstructorData] = useState([]);
-  const [error, setError] = useState(false);
+  const { isError, isLoading, errorMsg } = useSelector(store => store.burger);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    fetch(`${API_DOMAIN}api/ingredients`)
-      .then((data) => data.json())
-      .then(({data}) => {
-        setBuns(data.filter(food => food.type === 'bun'));
-        setMains(data.filter(food => food.type === 'main'));
-        setSauces(data.filter(food => food.type === 'sauce'));
-        setConstructorData(data.slice(2, 9).sort(() => 0.5 - Math.random())); //shuffle for fun
-      })
-      .catch(error => {
-        setError(error);
-      })
-  }, [])
+    dispatch(fetchBurgers());
+  }, []);
 
   return (
     <div className={appStyles.app}>
       <AppHeader />
       <div className={appStyles.mainContent}>
-        {error && (
+        {isLoading && (
+          <span>Загружаем ингредиенты! Немножечко терпения!</span>
+        )}
+        {isError && (
           <code>
             <p>Упс! Произошла ошибочка.. Вот ее текст:</p>
-            <p>{error.toString()}</p>
+            <p>{errorMsg}</p>
           </code>
         )}
-        {!error && (
-          <>
-            <BurgerIngredients buns={buns} mains={mains} sauces={sauces} />
-            <BurgerConstructor constructor={constructorData} />
-          </>
+        {!isError && !isLoading && (
+          <DndProvider backend={HTML5Backend}>
+            <BurgerIngredients />
+            <BurgerConstructor />
+          </DndProvider>
         )}
       </div>
     </div>
