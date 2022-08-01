@@ -31,3 +31,12 @@ export const initSelectedIngredientState = {
   fat: 0,
   carbohydrates: 0,
 };
+
+export const initialAuthState = {
+  name: '',
+  password: '',
+  email: '',
+
+  isError: false,
+  errorMsg: '',
+};

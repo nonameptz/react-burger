@@ -1,0 +1,16 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 480px;
+    margin: 25vh auto 0;
+    align-items: center;
+}
+
+.footerText {
+    display: flex;
+    flex-direction: row;
+}
+
+.footerText button {
+    padding: 0;
+}

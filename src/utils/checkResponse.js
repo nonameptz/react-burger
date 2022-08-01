@@ -1,6 +1,3 @@
-export default function checkResponse (result) {
-  if (result.ok) {
-    return result.json();
-  }
-  return Promise.reject(`Ошибка: ${result.status}`);
+export default function checkResponse (res) {
+  return res.ok ? res.json() : res.json().then((err) => Promise.reject(err));
 }

@@ -1,8 +1,20 @@
 import ingredientDetailsStyles from "./ingredient-details.module.css";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {useHistory} from "react-router-dom";
+import {fetchBurgers, selectIngredient} from "../../services/reducers/burger";
 
 const IngredientDetails = () => {
+  const history = useHistory();
+  const dispatch = useDispatch();
   const ingredient = useSelector(store => store.burger.selectedIngredient);
+  if (!ingredient || Object.keys(ingredient).length === 0) {
+    const id = history.location.pathname.split('/ingredients/')[1];
+    const fetchAndSelect = async () => {
+      await dispatch(fetchBurgers());
+      dispatch(selectIngredient({id} ))
+    }
+    fetchAndSelect();
+  }
   return (
     <div className={`${ingredientDetailsStyles.order} flex`}>
       <img src={ingredient.image_large} alt={ingredient.name} />

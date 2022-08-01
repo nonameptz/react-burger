@@ -1,4 +1,4 @@
-import {useState, useEffect } from 'react';
+import {useState } from 'react';
 import {
   Button,
   ConstructorElement,
@@ -11,8 +11,11 @@ import {useSelector, useDispatch} from "react-redux";
 import { addBun, addIngredient, removeIngredient, setOrder } from '../../services/reducers/burger';
 import {useDrop} from "react-dnd";
 import SortableConstructorElement from "./sortable-constructor-element";
+import {getCookie} from "../../utils/cookie";
+import {useHistory} from "react-router-dom";
 
 const BurgerConstructor = () => {
+  const history = useHistory();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const {
     ingredients,
@@ -42,10 +45,17 @@ const BurgerConstructor = () => {
   }
 
   const onOrderClick = async () => {
-    const ingredients = [constructorBun, ...constructorList, constructorBun]
-      .map((current) => current["_id"])
-    dispatch(setOrder(ingredients));
-    setIsModalVisible(true);
+    const token = getCookie('accessToken');
+    if (token) {
+      const ingredients = [constructorBun, ...constructorList, constructorBun]
+        .map((current) => current["_id"])
+      dispatch(setOrder(ingredients));
+      setIsModalVisible(true);
+    } else {
+      history.push({
+        pathname: '/login',
+      });
+    }
   }
 
   const onCloseModal = () => {

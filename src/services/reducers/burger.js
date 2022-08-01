@@ -3,6 +3,7 @@ import API_DOMAIN from "../../constants/apiConstant";
 import { initialState, initSelectedIngredientState } from '../../utils/initStates';
 import { v4 as uuidv4 } from 'uuid';
 import checkResponse from '../../utils/checkResponse';
+import {getCookie} from "../../utils/cookie";
 
 export const fetchBurgers = createAsyncThunk(
   'burger/fetch',
@@ -27,10 +28,12 @@ export const setOrder = createAsyncThunk(
   'burger/order',
   async (ingredients, thunkApi) => {
     try {
+      const token = getCookie('accessToken');
       const response = await fetch(`${API_DOMAIN}api/orders`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': token
         },
         body: JSON.stringify({ingredients})
       });
@@ -96,7 +99,12 @@ export const burgerSlice = createSlice({
       state.constructorList.splice(action.payload, 1);
     },
     selectIngredient: (state, action) => {
-      state.selectedIngredient = action.payload;
+      const findIng = [
+        ...state.ingredients.buns,
+        ...state.ingredients.sauces,
+        ...state.ingredients.mains,
+      ].find(ingredient => ingredient._id === action.payload.id);
+      state.selectedIngredient = findIng;
     },
     unselectIngredient: (state) => {
       state.selectedIngredient = initSelectedIngredientState;
