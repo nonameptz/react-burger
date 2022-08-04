@@ -1,6 +1,4 @@
-import {useEffect} from 'react';
-import {useDispatch, useSelector} from "react-redux";
-import {fetchBurgers} from "../services/reducers/burger";
+import {useSelector} from "react-redux";
 import burgerWrapperStyles from "./constructor.module.css";
 import {DndProvider} from "react-dnd";
 import {HTML5Backend} from "react-dnd-html5-backend";
@@ -11,11 +9,6 @@ import BurgerConstructor
 
 export const ConstructorPage = () => {
   const { isError, isLoading, errorMsg } = useSelector(store => store.burger);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fetchBurgers());
-  }, []);
 
   return (
     <div className={burgerWrapperStyles.mainContent}>

@@ -19,9 +19,10 @@ import AppHeader from "../app-header/app-header";
 import {ProtectedRoute} from "../protected-route/protected-route";
 import {VisitorRoute} from "../visitor-route/visitor-route";
 import IngredientsDetails from '../ingredient-details/ingredient-details'
-import { unselectIngredient } from '../../services/reducers/burger';
+import {fetchBurgers, unselectIngredient} from '../../services/reducers/burger';
 import Modal from "../modal/modal";
 import {useDispatch} from "react-redux";
+import {useEffect} from "react";
 
 function ModalSwitch() {
   const dispatch = useDispatch();
@@ -38,9 +39,9 @@ function ModalSwitch() {
     <>
       <AppHeader />
       <Switch location={background || location}>
-        <ProtectedRoute path="/" exact={true}>
+        <Route path="/" exact={true}>
           <ConstructorPage />
-        </ProtectedRoute>
+        </Route>
         <VisitorRoute path="/login" exact={true}>
           <LoginPage />
         </VisitorRoute>
@@ -80,6 +81,11 @@ function ModalSwitch() {
 
 
 const App = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchBurgers());
+  }, []);
   return (
     <div className={appStyles.app}>
       <Router>

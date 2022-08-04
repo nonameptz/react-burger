@@ -37,6 +37,8 @@ export const initialAuthState = {
   password: '',
   email: '',
 
+  isLoggedIn: false,
+
   isError: false,
   errorMsg: '',
 };

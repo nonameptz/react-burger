@@ -4,6 +4,7 @@ import { initialState, initSelectedIngredientState } from '../../utils/initState
 import { v4 as uuidv4 } from 'uuid';
 import checkResponse from '../../utils/checkResponse';
 import {getCookie} from "../../utils/cookie";
+import {refreshToken} from "./auth";
 
 export const fetchBurgers = createAsyncThunk(
   'burger/fetch',
@@ -40,7 +41,10 @@ export const setOrder = createAsyncThunk(
       const data = await checkResponse(response);
       return data.order.number;
     } catch (error) {
-      thunkApi.rejectWithValue({
+      if (error.message === 'jwt expired') {
+        thunkApi.dispatch(refreshToken(setOrder(ingredients)));
+      }
+      return thunkApi.rejectWithValue({
         message: 'Ошибка отправки заказа. Попробуйте снова.'
       })
     }

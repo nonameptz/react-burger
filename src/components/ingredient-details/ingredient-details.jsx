@@ -1,19 +1,17 @@
 import ingredientDetailsStyles from "./ingredient-details.module.css";
 import {useDispatch, useSelector} from "react-redux";
-import {useHistory} from "react-router-dom";
-import {fetchBurgers, selectIngredient} from "../../services/reducers/burger";
+import {useParams} from "react-router-dom";
+import {selectIngredient} from "../../services/reducers/burger";
 
 const IngredientDetails = () => {
-  const history = useHistory();
   const dispatch = useDispatch();
-  const ingredient = useSelector(store => store.burger.selectedIngredient);
+  const { id } = useParams();
+  const { ingredients, selectedIngredient: ingredient  } = useSelector(store => store.burger);
   if (!ingredient || Object.keys(ingredient).length === 0) {
-    const id = history.location.pathname.split('/ingredients/')[1];
-    const fetchAndSelect = async () => {
-      await dispatch(fetchBurgers());
-      dispatch(selectIngredient({id} ))
-    }
-    fetchAndSelect();
+    dispatch(selectIngredient({id} ))
+  }
+  if (!ingredients.buns.length) {
+    return null;
   }
   return (
     <div className={`${ingredientDetailsStyles.order} flex`}>

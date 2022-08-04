@@ -39,7 +39,9 @@ const AppHeader = () => {
         />
       </nav>
       <div className={`${appHeaderStyles.width33} ${appHeaderStyles.justifyCenter}`}>
-        <Logo />
+        <div className={`${appHeaderStyles.logo}`} onClick={onConstructorClick}>
+          <Logo />
+        </div>
       </div>
       <div className={`${appHeaderStyles.width33} ${appHeaderStyles.justifyEnd}`}>
         <NavButton

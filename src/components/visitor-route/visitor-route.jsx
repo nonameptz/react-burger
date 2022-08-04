@@ -1,14 +1,14 @@
 import { Route, Redirect } from 'react-router-dom';
-import {getCookie} from "../../utils/cookie";
+import {useSelector} from "react-redux";
 
 export function VisitorRoute({ children, ...rest }) {
-  const token = getCookie('accessToken');
+  const isLoggedIn = useSelector(store => store.auth.isLoggedIn);
 
   return (
     <Route
       {...rest}
       render={() =>
-        !token ? (
+        !isLoggedIn ? (
           children
         ) : (
           <Redirect

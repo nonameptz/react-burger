@@ -8,47 +8,54 @@ import {
 import commonStyles from "./common.module.css";
 import {login} from "../services/reducers/auth";
 import {useDispatch, useSelector} from "react-redux";
+import {useForm} from "../hooks/useForm";
 
 export const LoginPage = () => {
   const dispatch = useDispatch();
   const { isError, errorMsg } = useSelector(store => store.auth)
   const history = useHistory();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const onEnterClick = async () => {
-    const response = await dispatch(login({email, password}));
+  const from = history.location?.state?.from;
+  const {values, handleChange} = useForm({
+    password: '',
+    email: '',
+  });
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    const response = await dispatch(login(values));
 
     if (!response.error && !response.payload?.message) {
-      history.replace({ pathname: '/' });
+      history.replace({ pathname: from || '/' });
     }
   };
   return (
     <div className={commonStyles.container}>
       <h2 className='text text_type_main-medium mb-6'>Вход</h2>
-      <div className='mb-6'>
-        <Input
-          type={'email'}
-          placeholder={'E-mail'}
-          onChange={e => setEmail(e.target.value)}
-          value={email}
-          name={'name'}
-          error={false}
-          errorText={'Ошибка'}
-        />
-      </div>
-      <div className='mb-6'>
-        <PasswordInput
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          name={'password'}
-        />
-      </div>
-      {isError && (
-        <p className='input__error text_type_main-default'>{errorMsg}</p>
-      )}
-      <Button type="primary" size="large" onClick={onEnterClick}>
-        Войти
-      </Button>
+      <form className={commonStyles.form} onSubmit={onSubmit}>
+        <div className='mb-6'>
+          <Input
+            type={'email'}
+            placeholder={'E-mail'}
+            onChange={handleChange}
+            value={values.email}
+            name={'email'}
+            error={false}
+            errorText={'Ошибка'}
+          />
+        </div>
+        <div className='mb-6'>
+          <PasswordInput
+            value={values.password}
+            onChange={handleChange}
+            name={'password'}
+          />
+        </div>
+        {isError && (
+          <p className='input__error text_type_main-default'>{errorMsg}</p>
+        )}
+        <Button type="primary" size="large" disabled={!values.password || !values.email}>
+          Войти
+        </Button>
+      </form>
       <div className={`${commonStyles.footerText} mt-20`}>
         <p className="text text_type_main-default text_color_inactive mr-2">
           Вы - новый пользователь?

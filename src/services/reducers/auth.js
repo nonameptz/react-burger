@@ -80,7 +80,7 @@ export const login = createAsyncThunk(
         },
         body: JSON.stringify({ password, email })
       });
-      let data = await checkResponse(response)
+      const data = await checkResponse(response)
       return data;
     } catch (error) {
       return thunkApi.rejectWithValue({
@@ -92,7 +92,7 @@ export const login = createAsyncThunk(
 
 export const logout = createAsyncThunk(
   'auth/logout',
-  async ({token}, thunkApi) => {
+  async (_, thunkApi) => {
     try {
       const token = localStorage.getItem('refreshToken');
       const response = await fetch(`${API_DOMAIN}api/auth/logout`, {
@@ -102,7 +102,7 @@ export const logout = createAsyncThunk(
         },
         body: JSON.stringify({ token })
       });
-      let data = await checkResponse(response)
+      const data = await checkResponse(response)
       return data;
     } catch (error) {
       return thunkApi.rejectWithValue({
@@ -125,7 +125,7 @@ export const refreshTokenRequest = () => {
     .then(checkResponse)
 }
 
-const refreshToken = (afterRefresh) => (dispatch) => {
+export const refreshToken = (afterRefresh) => (dispatch) => {
   refreshTokenRequest()
     .then((res) => {
       localStorage.setItem('refreshToken', res.refreshToken);
@@ -145,7 +145,7 @@ export const getUser = createAsyncThunk(
           'Authorization': getCookie('accessToken')
         },
       });
-      let data = await checkResponse(response)
+      const data = await checkResponse(response)
       return data;
     } catch (error) {
       if (error.message === 'jwt expired') {
@@ -170,7 +170,7 @@ export const setUser = createAsyncThunk(
         },
         body: JSON.stringify({name, email})
       });
-      let data = await checkResponse(response)
+      const data = await checkResponse(response)
       return data;
     } catch (error) {
       if (error.message === 'jwt expired') {
@@ -221,6 +221,7 @@ export const authSlice = createSlice({
           state.email = action.payload.user.email;
           localStorage.setItem('refreshToken', action.payload.refreshToken);
           setCookie('accessToken', action.payload.accessToken, 2);
+          state.isLoggedIn = true;
         } else {
           state.isError = true;
           state.errorMsg = 'Ошибка авторизации';
@@ -228,8 +229,8 @@ export const authSlice = createSlice({
       })
       .addCase(login.rejected, (state, action) => {
         state.isError = true;
-        if (action.payload?.message) {
-          state.errorMsg = action.payload?.message;
+        if (action.payload?.message?.message) {
+          state.errorMsg = action.payload?.message?.message;
         }
       });
 
@@ -243,6 +244,7 @@ export const authSlice = createSlice({
         localStorage.removeItem('refreshToken');
         state.isError = false;
         state.errorMsg = '';
+        state.isLoggedIn = false;
         deleteCookie('accessToken');
       })
       .addCase(logout.rejected, (state, action) => {
@@ -250,7 +252,6 @@ export const authSlice = createSlice({
         if (action.payload?.message) {
           state.errorMsg = action.payload?.message;
         }
-        deleteCookie('accessToken');
       });
 
       builder
@@ -275,6 +276,8 @@ export const authSlice = createSlice({
           state.isError = false;
         })
         .addCase(setUser.fulfilled, (state, action) => {
+          state.name = action.payload.user.name;
+          state.email = action.payload.user.email;
           state.isError = false;
           state.errorMsg = '';
         })

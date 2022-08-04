@@ -24,6 +24,7 @@ const BurgerConstructor = () => {
     totalPrice,
     orderLoading
   } = useSelector(store => store.burger);
+  const { isLoggedIn } = useSelector(store => store.auth);
   const dispatch = useDispatch();
 
   const [, dropBunTarget] = useDrop({
@@ -45,8 +46,7 @@ const BurgerConstructor = () => {
   }
 
   const onOrderClick = async () => {
-    const token = getCookie('accessToken');
-    if (token) {
+    if (isLoggedIn) {
       const ingredients = [constructorBun, ...constructorList, constructorBun]
         .map((current) => current["_id"])
       dispatch(setOrder(ingredients));

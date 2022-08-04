@@ -7,13 +7,17 @@ import {
 import commonStyles from "./common.module.css";
 import {useDispatch} from "react-redux";
 import { forgetPassword } from "../services/reducers/auth";
+import {useForm} from "../hooks/useForm";
 
 export const ForgotPasswordPage = () => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const [email, setEmail] = useState('');
-  const onRecoveryClick = async () => {
-    const result = await dispatch(forgetPassword(email))
+  const {values, handleChange} = useForm({
+    email: '',
+  });
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    const result = await dispatch(forgetPassword(values))
     if (result.payload === true) {
       history.push({
         pathname: '/reset-password',
@@ -24,20 +28,22 @@ export const ForgotPasswordPage = () => {
   return (
     <div className={commonStyles.container}>
       <h2 className='text text_type_main-medium mb-6'>Восстановление пароля</h2>
-      <div className='mb-6'>
-        <Input
-          type={'email'}
-          placeholder={'E-mail'}
-          onChange={e => setEmail(e.target.value)}
-          value={email}
-          name={'name'}
-          error={false}
-          errorText={'Ошибка'}
-        />
-      </div>
-      <Button type="primary" size="large" onClick={onRecoveryClick}>
-        Восстановить
-      </Button>
+      <form className={commonStyles.form} onSubmit={onSubmit}>
+        <div className='mb-6'>
+          <Input
+            type={'email'}
+            placeholder={'E-mail'}
+            onChange={handleChange}
+            value={values.email}
+            name={'email'}
+            error={false}
+            errorText={'Ошибка'}
+          />
+        </div>
+        <Button type="primary" size="large">
+          Восстановить
+        </Button>
+      </form>
       <div className={`${commonStyles.footerText} mt-20`}>
         <p className="text text_type_main-default text_color_inactive mr-2">
           Вспомнили пароль?
