@@ -8,7 +8,11 @@ import BurgerConstructor
   from "../components/burger-constructor/burger-constructor";
 
 export const ConstructorPage = () => {
-  const { isError, isLoading, errorMsg } = useSelector(store => store.burger);
+  const { isError, isLoading, isLoaded, errorMsg } = useSelector(store => store.burger);
+
+  if (!isLoaded) {
+    return null;
+  }
 
   return (
     <div className={burgerWrapperStyles.mainContent}>

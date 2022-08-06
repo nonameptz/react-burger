@@ -2,15 +2,18 @@ import ingredientDetailsStyles from "./ingredient-details.module.css";
 import {useDispatch, useSelector} from "react-redux";
 import {useParams} from "react-router-dom";
 import {selectIngredient} from "../../services/reducers/burger";
+import {useEffect} from "react";
 
 const IngredientDetails = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
-  const { ingredients, selectedIngredient: ingredient  } = useSelector(store => store.burger);
-  if (!ingredient || Object.keys(ingredient).length === 0) {
-    dispatch(selectIngredient({id} ))
-  }
-  if (!ingredients.buns.length) {
+  const { selectedIngredient: ingredient , isLoaded } = useSelector(store => store.burger);
+  useEffect(() => {
+    if (isLoaded && (!ingredient || Object.keys(ingredient).length === 0)) {
+      dispatch(selectIngredient({id} ))
+    }
+  }, [isLoaded])
+  if (!isLoaded || !ingredient) {
     return null;
   }
   return (

@@ -5,6 +5,7 @@ export const initialState = {
     sauces: [],
   },
   isLoading: false,
+  isLoaded: false,
   isError: false,
   errorMsg: '',
 

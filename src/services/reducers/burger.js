@@ -129,6 +129,7 @@ export const burgerSlice = createSlice({
     })
     .addCase(fetchBurgers.fulfilled, (state, action) => {
       state.ingredients = action.payload;
+      state.isLoaded = true;
       state.isLoading = false;
     })
     .addCase(fetchBurgers.rejected, (state, action) => {

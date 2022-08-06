@@ -261,6 +261,7 @@ export const authSlice = createSlice({
         .addCase(getUser.fulfilled, (state, action) => {
           state.name = action.payload.user.name;
           state.email = action.payload.user.email;
+          state.isLoggedIn = true;
           state.isError = false;
           state.errorMsg = '';
         })

@@ -1,9 +1,9 @@
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import {
   Button,
   Input
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import {getUser, setUser, setStateEmail, setStateUserName} from "../../services/reducers/auth";
+import {getUser, setUser} from "../../services/reducers/auth";
 import {useDispatch, useSelector} from "react-redux";
 import {useForm} from "../../hooks/useForm";
 
