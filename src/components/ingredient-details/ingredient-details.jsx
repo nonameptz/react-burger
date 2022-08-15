@@ -1,8 +1,21 @@
 import ingredientDetailsStyles from "./ingredient-details.module.css";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {useParams} from "react-router-dom";
+import {selectIngredient} from "../../services/reducers/burger";
+import {useEffect} from "react";
 
 const IngredientDetails = () => {
-  const ingredient = useSelector(store => store.burger.selectedIngredient);
+  const dispatch = useDispatch();
+  const { id } = useParams();
+  const { selectedIngredient: ingredient , isLoaded } = useSelector(store => store.burger);
+  useEffect(() => {
+    if (isLoaded && (!ingredient || Object.keys(ingredient).length === 0)) {
+      dispatch(selectIngredient({id} ))
+    }
+  }, [isLoaded])
+  if (!isLoaded || !ingredient) {
+    return null;
+  }
   return (
     <div className={`${ingredientDetailsStyles.order} flex`}>
       <img src={ingredient.image_large} alt={ingredient.name} />

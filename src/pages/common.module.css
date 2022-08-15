@@ -1,0 +1,22 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 480px;
+    margin: 25vh auto 0;
+    align-items: center;
+}
+
+.form {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.footerText {
+    display: flex;
+    flex-direction: row;
+}
+
+.footerText button {
+    padding: 0;
+}

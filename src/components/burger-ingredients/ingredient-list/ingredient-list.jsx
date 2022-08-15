@@ -1,32 +1,23 @@
-import React, {useState} from "react";
 import ingredientListStyles from './ingredient-list.module.css';
 import Ingredient from "../ingredient/ingredient";
-import Modal from "../../modal/modal";
-import IngredientDetails from "../../ingredient-details/ingredient-details";
 import {string, arrayOf} from "prop-types";
 import {ingredientType} from "../../../utils/types";
-import { selectIngredient, unselectIngredient } from '../../../services/reducers/burger';
+import { selectIngredient } from '../../../services/reducers/burger';
 import {useDispatch} from "react-redux";
+import {useHistory, useLocation} from "react-router-dom";
 
 const IngredientList = ({title, list, type}) => {
-  const [modalVisible, setModalVisible] = useState(false);
+  const history = useHistory();
+  const location = useLocation();
   const dispatch = useDispatch();
 
   const onIngredientClick = (ingredient) => {
-    setModalVisible(true);
-    dispatch(selectIngredient(ingredient))
+    dispatch(selectIngredient({id: ingredient._id} ))
+    history.push({
+      pathname: '/ingredients/' + ingredient._id,
+      state: { background: location }
+    });
   }
-
-  const onCloseModal = () => {
-    setModalVisible(false);
-    dispatch(unselectIngredient())
-  }
-
-  const modal = (
-    <Modal header='Детали ингредиента' onClose={onCloseModal}>
-      <IngredientDetails />
-    </Modal>
-  );
 
   return (
     <>
@@ -43,7 +34,6 @@ const IngredientList = ({title, list, type}) => {
                        onClick={() => onIngredientClick(ingredient)}
           />)
         )}
-        {modalVisible && modal}
       </section>
     </>
   );

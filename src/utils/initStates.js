@@ -5,6 +5,7 @@ export const initialState = {
     sauces: [],
   },
   isLoading: false,
+  isLoaded: false,
   isError: false,
   errorMsg: '',
 
@@ -30,4 +31,15 @@ export const initSelectedIngredientState = {
   proteins: 0,
   fat: 0,
   carbohydrates: 0,
+};
+
+export const initialAuthState = {
+  name: '',
+  password: '',
+  email: '',
+
+  isLoggedIn: false,
+
+  isError: false,
+  errorMsg: '',
 };

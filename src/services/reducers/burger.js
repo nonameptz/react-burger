@@ -3,6 +3,8 @@ import API_DOMAIN from "../../constants/apiConstant";
 import { initialState, initSelectedIngredientState } from '../../utils/initStates';
 import { v4 as uuidv4 } from 'uuid';
 import checkResponse from '../../utils/checkResponse';
+import {getCookie} from "../../utils/cookie";
+import {refreshToken} from "./auth";
 
 export const fetchBurgers = createAsyncThunk(
   'burger/fetch',
@@ -27,17 +29,22 @@ export const setOrder = createAsyncThunk(
   'burger/order',
   async (ingredients, thunkApi) => {
     try {
+      const token = getCookie('accessToken');
       const response = await fetch(`${API_DOMAIN}api/orders`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': token
         },
         body: JSON.stringify({ingredients})
       });
       const data = await checkResponse(response);
       return data.order.number;
     } catch (error) {
-      thunkApi.rejectWithValue({
+      if (error.message === 'jwt expired') {
+        thunkApi.dispatch(refreshToken(setOrder(ingredients)));
+      }
+      return thunkApi.rejectWithValue({
         message: 'Ошибка отправки заказа. Попробуйте снова.'
       })
     }
@@ -96,7 +103,12 @@ export const burgerSlice = createSlice({
       state.constructorList.splice(action.payload, 1);
     },
     selectIngredient: (state, action) => {
-      state.selectedIngredient = action.payload;
+      const findIng = [
+        ...state.ingredients.buns,
+        ...state.ingredients.sauces,
+        ...state.ingredients.mains,
+      ].find(ingredient => ingredient._id === action.payload.id);
+      state.selectedIngredient = findIng;
     },
     unselectIngredient: (state) => {
       state.selectedIngredient = initSelectedIngredientState;
@@ -117,6 +129,7 @@ export const burgerSlice = createSlice({
     })
     .addCase(fetchBurgers.fulfilled, (state, action) => {
       state.ingredients = action.payload;
+      state.isLoaded = true;
       state.isLoading = false;
     })
     .addCase(fetchBurgers.rejected, (state, action) => {
