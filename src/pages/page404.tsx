@@ -1,9 +1,19 @@
-import {useCallback} from 'react';
+import {FC, SyntheticEvent, useCallback} from 'react';
 import { useHistory } from 'react-router-dom';
 import styles from './page404.module.css';
-import {Button} from "@ya.praktikum/react-developer-burger-ui-components";
+import {Button as ButtonUI} from "@ya.praktikum/react-developer-burger-ui-components/dist/ui/button";
 
-export const NotFound404 = () => {
+const Button: React.FC<{
+  type?: 'secondary' | 'primary';
+  size?: 'small' | 'medium' | 'large';
+  onClick?: (() => void) | ((e: SyntheticEvent) => void);
+  disabled?: boolean;
+  name?: string;
+  htmlType?: 'button' | 'submit' | 'reset';
+  children: React.ReactNode;
+}> = ButtonUI;
+
+export const NotFound404:FC = () => {
   const history = useHistory();
   const onBackClick = useCallback(
     () => {

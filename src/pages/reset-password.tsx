@@ -1,7 +1,7 @@
-import {useState} from 'react';
+import {FC, SyntheticEvent, useState} from 'react';
 import { useHistory } from 'react-router-dom';
 import {
-  Button,
+  Button as ButtonUI,
   Input, PasswordInput
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import commonStyles from "./common.module.css";
@@ -9,8 +9,18 @@ import {useDispatch} from "react-redux";
 import { resetPassword } from "../services/reducers/auth";
 import {useForm} from "../hooks/useForm";
 
-export const ResetPasswordPage = () => {
-  const history = useHistory();
+const Button: React.FC<{
+  type?: 'secondary' | 'primary';
+  size?: 'small' | 'medium' | 'large';
+  onClick?: (() => void) | ((e: SyntheticEvent) => void);
+  disabled?: boolean;
+  name?: string;
+  htmlType?: 'button' | 'submit' | 'reset';
+  children: React.ReactNode;
+}> = ButtonUI;
+
+export const ResetPasswordPage:FC = () => {
+  const history = useHistory<any>();
   const dispatch = useDispatch();
   const {values, handleChange} = useForm({
     password: '',
@@ -21,8 +31,9 @@ export const ResetPasswordPage = () => {
     history.replace({ pathname: '/forgot-password' });
   }
 
-  const onSubmit = async (e) => {
+  const onSubmit = async (e:SyntheticEvent) => {
     e.preventDefault();
+    //@ts-ignore
     const result = await dispatch(resetPassword(values))
     if (result.payload === true) {
       history.replace({ pathname: '/login' });
@@ -34,7 +45,6 @@ export const ResetPasswordPage = () => {
       <form className={commonStyles.form} onSubmit={onSubmit}>
         <div className='mb-6'>
           <PasswordInput
-            placeholder={'Введите новый пароль'}
             value={values.password}
             onChange={handleChange}
             name={'password'}

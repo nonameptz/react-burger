@@ -1,4 +1,4 @@
-export function getCookie(cname) {
+export function getCookie(cname:string):string {
   let name = cname + "=";
   let decodedCookie = decodeURIComponent(document.cookie);
   let ca = decodedCookie.split(';');
@@ -14,13 +14,13 @@ export function getCookie(cname) {
   return "";
 }
 
-export function setCookie(cname, cvalue, exdays) {
+export function setCookie(cname:string, cvalue:string, exdays:number) {
   const d = new Date();
   d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
   let expires = "expires="+d.toUTCString();
   document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 
-export function deleteCookie(cname) {
+export function deleteCookie(cname:string) {
   document.cookie = cname+'=; Max-Age=-99999999;';
 }

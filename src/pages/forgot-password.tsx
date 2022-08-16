@@ -1,22 +1,33 @@
-import {useState} from 'react';
 import { useHistory } from 'react-router-dom';
 import {
-  Button,
+  Button as ButtonUI,
   Input,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import commonStyles from "./common.module.css";
 import {useDispatch} from "react-redux";
 import { forgetPassword } from "../services/reducers/auth";
 import {useForm} from "../hooks/useForm";
+import {FC, SyntheticEvent} from "react";
 
-export const ForgotPasswordPage = () => {
+const Button: React.FC<{
+  type?: 'secondary' | 'primary';
+  size?: 'small' | 'medium' | 'large';
+  onClick?: (() => void) | ((e: SyntheticEvent) => void);
+  disabled?: boolean;
+  name?: string;
+  htmlType?: 'button' | 'submit' | 'reset';
+  children: React.ReactNode;
+}> = ButtonUI;
+
+export const ForgotPasswordPage:FC = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const {values, handleChange} = useForm({
     email: '',
   });
-  const onSubmit = async (e) => {
+  const onSubmit = async (e:SyntheticEvent) => {
     e.preventDefault();
+    //@ts-ignore
     const result = await dispatch(forgetPassword(values))
     if (result.payload === true) {
       history.push({

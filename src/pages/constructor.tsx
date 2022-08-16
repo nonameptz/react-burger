@@ -6,9 +6,11 @@ import BurgerIngredients
   from "../components/burger-ingredients/burger-ingredients";
 import BurgerConstructor
   from "../components/burger-constructor/burger-constructor";
+import {FC} from "react";
+import {IBurgerStore, IRootStore} from "../types/store";
 
-export const ConstructorPage = () => {
-  const { isError, isLoading, isLoaded, errorMsg } = useSelector(store => store.burger);
+export const ConstructorPage:FC = () => {
+  const { isError, isLoading, isLoaded, errorMsg } = useSelector<IRootStore, IBurgerStore>(store => store.burger);
 
   if (!isLoaded) {
     return null;

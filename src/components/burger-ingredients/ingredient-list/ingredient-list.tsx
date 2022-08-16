@@ -1,21 +1,27 @@
 import ingredientListStyles from './ingredient-list.module.css';
 import Ingredient from "../ingredient/ingredient";
-import {string, arrayOf} from "prop-types";
-import {ingredientType} from "../../../utils/types";
 import { selectIngredient } from '../../../services/reducers/burger';
 import {useDispatch} from "react-redux";
 import {useHistory, useLocation} from "react-router-dom";
+import {IIngredient} from "../../../types/store";
+import {FC} from "react";
 
-const IngredientList = ({title, list, type}) => {
+interface IIngredientList {
+  title: string;
+  list: Array<IIngredient>;
+  type: string;
+}
+
+const IngredientList:FC<IIngredientList> = ({title, list, type}) => {
   const history = useHistory();
   const location = useLocation();
   const dispatch = useDispatch();
 
-  const onIngredientClick = (ingredient) => {
+  const onIngredientClick = (ingredient:IIngredient):void => {
     dispatch(selectIngredient({id: ingredient._id} ))
     history.push({
       pathname: '/ingredients/' + ingredient._id,
-      state: { background: location }
+      state: { from: location }
     });
   }
 
@@ -38,11 +44,5 @@ const IngredientList = ({title, list, type}) => {
     </>
   );
 }
-
-IngredientList.propTypes = {
-  title: string.isRequired,
-  type: string.isRequired,
-  list: arrayOf(ingredientType).isRequired,
-};
 
 export default IngredientList;

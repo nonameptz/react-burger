@@ -1,6 +1,6 @@
-import {useState } from 'react';
+import {FC, SyntheticEvent, useState} from 'react';
 import {
-  Button,
+  Button as ButtonUI,
   ConstructorElement,
   CurrencyIcon
 } from "@ya.praktikum/react-developer-burger-ui-components";
@@ -11,37 +11,59 @@ import {useSelector, useDispatch} from "react-redux";
 import { addBun, addIngredient, removeIngredient, setOrder } from '../../services/reducers/burger';
 import {useDrop} from "react-dnd";
 import SortableConstructorElement from "./sortable-constructor-element";
-import {getCookie} from "../../utils/cookie";
 import {useHistory} from "react-router-dom";
+import {IBurgerStore, IIngredient, IRootStore} from "../../types/store";
 
-const BurgerConstructor = () => {
+interface DragItem {
+  index: number
+  id: string
+  type: string
+}
+
+const Button: React.FC<{
+  type?: 'secondary' | 'primary';
+  size?: 'small' | 'medium' | 'large';
+  onClick?: (() => void) | ((e: SyntheticEvent) => void);
+  disabled?: boolean;
+  name?: string;
+  htmlType?: 'button' | 'submit' | 'reset';
+  children: React.ReactNode;
+}> = ButtonUI;
+
+const BurgerConstructor:FC = () => {
   const history = useHistory();
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const {
     ingredients,
     constructorList,
     constructorBun,
     totalPrice,
     orderLoading
-  } = useSelector(store => store.burger);
-  const { isLoggedIn } = useSelector(store => store.auth);
+  } = useSelector<IRootStore, IBurgerStore>(store => store.burger);
+  const isLoggedIn = useSelector<IRootStore, boolean>(store => store.auth.isLoggedIn);
   const dispatch = useDispatch();
 
-  const [, dropBunTarget] = useDrop({
+  const [, dropBunTarget] = useDrop<
+    DragItem,
+    void
+  >({
     accept: 'buns',
     drop({index, type}) {
       dispatch(addBun(ingredients[type][index]));
     },
   });
 
-  const [, dropIngredientTarget] = useDrop({
+  const [, dropIngredientTarget] = useDrop<
+    DragItem,
+    void
+  >({
     accept: ['sauces', 'mains'],
     drop({index, type}) {
       dispatch(addIngredient(ingredients[type][index]));
     },
   });
 
-  const onDelete = (index) => {
+  const onDelete = (index:number):void => {
     dispatch(removeIngredient(index));
   }
 
@@ -49,6 +71,7 @@ const BurgerConstructor = () => {
     if (isLoggedIn) {
       const ingredients = [constructorBun, ...constructorList, constructorBun]
         .map((current) => current["_id"])
+      //@ts-ignore
       dispatch(setOrder(ingredients));
       setIsModalVisible(true);
     } else {
@@ -69,7 +92,7 @@ const BurgerConstructor = () => {
   );
 
   const getMissedText = () => {
-    let output = [];
+    const output = [];
     if (!constructorBun.name) {
       output.push('булку');
     }
@@ -93,7 +116,7 @@ const BurgerConstructor = () => {
               />)}
             </div>
             <div className={`flex ${burgerConstructorStyles.constructorList} scroll mt-3 mb-3`}>
-              {constructorList.map((element, index) => {
+              {constructorList.map((element:IIngredient, index) => {
                 return (
                   <SortableConstructorElement
                     element={element}

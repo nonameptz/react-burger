@@ -1,12 +1,19 @@
-import {useCallback} from 'react';
+import React, {FC, useCallback} from 'react';
 import {Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
-import {Tab} from "@ya.praktikum/react-developer-burger-ui-components";
+import {Tab as TabUI} from "@ya.praktikum/react-developer-burger-ui-components";
 import profileStyles from './profile.module.css';
 import {ProfileInfo} from "../components/profile-info/profile-info";
 import {logout} from "../services/reducers/auth";
 import {useDispatch} from "react-redux";
 
-export const ProfilePage = () => {
+const Tab: React.FC<{
+  active: boolean;
+  value: string;
+  onClick: (value: string) => void;
+  children: React.ReactNode;
+}> = TabUI;
+
+export const ProfilePage:FC = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const { path } = useRouteMatch();
@@ -24,6 +31,7 @@ export const ProfilePage = () => {
   );
 
   const onLogoutClick = async () => {
+    //@ts-ignore
     await dispatch(logout());
     history.push({ pathname: '/login' });
   }
