@@ -1,25 +1,15 @@
 import {FC, SyntheticEvent} from 'react';
 import { useHistory } from 'react-router-dom';
 import {
-  Button as ButtonUI,
   Input,
   PasswordInput
 } from "@ya.praktikum/react-developer-burger-ui-components";
+import Button from "../components/button/button";
 import commonStyles from "./common.module.css";
 import {login} from "../services/reducers/auth";
 import {useDispatch, useSelector} from "react-redux";
 import {useForm} from "../hooks/useForm";
 import {IRootStore} from "../types/store";
-
-const Button: React.FC<{
-  type?: 'secondary' | 'primary';
-  size?: 'small' | 'medium' | 'large';
-  onClick?: (() => void) | ((e: SyntheticEvent) => void);
-  disabled?: boolean;
-  name?: string;
-  htmlType?: 'button' | 'submit' | 'reset';
-  children: React.ReactNode;
-}> = ButtonUI;
 
 export const LoginPage:FC = () => {
   const dispatch = useDispatch();

@@ -1,17 +1,7 @@
-import {FC, SyntheticEvent, useCallback} from 'react';
+import {FC, useCallback} from 'react';
 import { useHistory } from 'react-router-dom';
 import styles from './page404.module.css';
-import {Button as ButtonUI} from "@ya.praktikum/react-developer-burger-ui-components/dist/ui/button";
-
-const Button: React.FC<{
-  type?: 'secondary' | 'primary';
-  size?: 'small' | 'medium' | 'large';
-  onClick?: (() => void) | ((e: SyntheticEvent) => void);
-  disabled?: boolean;
-  name?: string;
-  htmlType?: 'button' | 'submit' | 'reset';
-  children: React.ReactNode;
-}> = ButtonUI;
+import Button from "../components/button/button";
 
 export const NotFound404:FC = () => {
   const history = useHistory();

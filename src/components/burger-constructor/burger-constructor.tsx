@@ -1,9 +1,9 @@
 import {FC, SyntheticEvent, useState} from 'react';
 import {
-  Button as ButtonUI,
   ConstructorElement,
   CurrencyIcon
 } from "@ya.praktikum/react-developer-burger-ui-components";
+import Button from "../button/button";
 import burgerConstructorStyles from './burger-constructor.module.css';
 import Modal from "../modal/modal";
 import OrderDetails from "../order-details/order-details";
@@ -19,16 +19,6 @@ interface DragItem {
   id: string
   type: string
 }
-
-const Button: React.FC<{
-  type?: 'secondary' | 'primary';
-  size?: 'small' | 'medium' | 'large';
-  onClick?: (() => void) | ((e: SyntheticEvent) => void);
-  disabled?: boolean;
-  name?: string;
-  htmlType?: 'button' | 'submit' | 'reset';
-  children: React.ReactNode;
-}> = ButtonUI;
 
 const BurgerConstructor:FC = () => {
   const history = useHistory();

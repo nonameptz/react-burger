@@ -21,7 +21,7 @@ const IngredientList:FC<IIngredientList> = ({title, list, type}) => {
     dispatch(selectIngredient({id: ingredient._id} ))
     history.push({
       pathname: '/ingredients/' + ingredient._id,
-      state: { from: location }
+      state: { background: location }
     });
   }
 

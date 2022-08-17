@@ -23,10 +23,17 @@ import {fetchBurgers, unselectIngredient} from '../../services/reducers/burger';
 import Modal from '../modal/modal';
 import {useDispatch} from 'react-redux';
 import {useEffect} from 'react';
+import {Location} from "history";
+
+export interface ILocation {
+  from: Location;
+  background?: Location;
+  pathname: string;
+}
 
 function ModalSwitch() {
   const dispatch = useDispatch();
-  const location = useLocation<any>();
+  const location = useLocation<ILocation>();
   const history = useHistory();
   const background = location.state && location.state.background;
 

@@ -1,22 +1,10 @@
 import {FC, SyntheticEvent, useEffect} from "react";
-import {
-  Button as ButtonUI,
-  Input
-} from "@ya.praktikum/react-developer-burger-ui-components";
+import { Input } from "@ya.praktikum/react-developer-burger-ui-components";
+import Button from "../button/button";
 import {getUser, setUser} from "../../services/reducers/auth";
 import {useDispatch, useSelector} from "react-redux";
 import {TProfileInfoForm, useForm} from "../../hooks/useForm";
 import {IRootStore} from "../../types/store";
-
-const Button: React.FC<{
-  type?: 'secondary' | 'primary';
-  size?: 'small' | 'medium' | 'large';
-  onClick?: (() => void) | ((e: SyntheticEvent) => void);
-  disabled?: boolean;
-  name?: string;
-  htmlType?: 'button' | 'submit' | 'reset';
-  children: React.ReactNode;
-}> = ButtonUI;
 
 export const ProfileInfo:FC = () => {
   const dispatch = useDispatch();
