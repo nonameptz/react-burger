@@ -1,28 +1,30 @@
-import {useState} from 'react';
+import {FC, SyntheticEvent, useState} from 'react';
 import { useHistory } from 'react-router-dom';
-import {
-  Button,
-  Input,
-} from "@ya.praktikum/react-developer-burger-ui-components";
+import { Input, PasswordInput } from "@ya.praktikum/react-developer-burger-ui-components";
+import Button from "../components/button/button";
 import commonStyles from "./common.module.css";
 import {useDispatch} from "react-redux";
-import { forgetPassword } from "../services/reducers/auth";
+import { resetPassword } from "../services/reducers/auth";
 import {useForm} from "../hooks/useForm";
 
-export const ForgotPasswordPage = () => {
-  const history = useHistory();
+export const ResetPasswordPage:FC = () => {
+  const history = useHistory<any>();
   const dispatch = useDispatch();
   const {values, handleChange} = useForm({
-    email: '',
+    password: '',
+    token: '',
   });
-  const onSubmit = async (e) => {
+
+  if (!history.location?.state?.fromForgotPassword) {
+    history.replace({ pathname: '/forgot-password' });
+  }
+
+  const onSubmit = async (e:SyntheticEvent) => {
     e.preventDefault();
-    const result = await dispatch(forgetPassword(values))
+    //@ts-ignore
+    const result = await dispatch(resetPassword(values))
     if (result.payload === true) {
-      history.push({
-        pathname: '/reset-password',
-        state: { fromForgotPassword: true }
-      });
+      history.replace({ pathname: '/login' });
     }
   }
   return (
@@ -30,18 +32,23 @@ export const ForgotPasswordPage = () => {
       <h2 className='text text_type_main-medium mb-6'>Восстановление пароля</h2>
       <form className={commonStyles.form} onSubmit={onSubmit}>
         <div className='mb-6'>
-          <Input
-            type={'email'}
-            placeholder={'E-mail'}
+          <PasswordInput
+            value={values.password}
             onChange={handleChange}
-            value={values.email}
-            name={'email'}
-            error={false}
+            name={'password'}
+          />
+        </div>
+        <div className='mb-6'>
+          <Input
+            placeholder={'Введите код из письма'}
+            onChange={handleChange}
+            value={values.token}
+            name={'token'}
             errorText={'Ошибка'}
           />
         </div>
         <Button type="primary" size="large">
-          Восстановить
+          Сохранить
         </Button>
       </form>
       <div className={`${commonStyles.footerText} mt-20`}>

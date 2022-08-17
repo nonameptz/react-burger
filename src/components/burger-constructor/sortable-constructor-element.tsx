@@ -4,24 +4,38 @@ import {
   DragIcon
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useDrag, useDrop } from "react-dnd";
-import { useRef } from "react";
+import {FC, useRef} from "react";
 import { useDispatch } from "react-redux";
 import { sortConstructorElements } from '../../services/reducers/burger';
-import { number, func } from "prop-types";
-import { ingredientType } from "../../utils/types";
+import {IIngredient} from "../../types/store";
 
-const SortableConstructorElement = ({index, element, onDelete}) => {
-  const dragDropSortRef = useRef(null);
+interface ISortableConstructorElement {
+  index: number;
+  element: IIngredient;
+  onDelete: () => void;
+}
+
+interface DragItem {
+  index: number
+  id: string
+  type: string
+}
+
+const SortableConstructorElement:FC<ISortableConstructorElement> = ({index, element, onDelete}) => {
+  const dragDropSortRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();
 
-  const [{ handlerId }, drop] = useDrop({
+  const [, drop] = useDrop<
+    DragItem,
+    void
+  >({
     accept: 'sort',
     collect(monitor) {
       return {
         handlerId: monitor.getHandlerId(),
       }
     },
-    hover(item, monitor) {
+    hover(item:DragItem, monitor) {
       if (!dragDropSortRef.current) {
         return
       }
@@ -37,7 +51,7 @@ const SortableConstructorElement = ({index, element, onDelete}) => {
       const hoverMiddleY =
         (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2
       // Determine mouse position
-      const clientOffset = monitor.getClientOffset()
+      const clientOffset = monitor.getClientOffset()!
       // Get pixels to the top
       const hoverClientY = clientOffset.y - hoverBoundingRect.top
       // Only perform the move when the mouse has crossed half of the items height
@@ -87,11 +101,5 @@ const SortableConstructorElement = ({index, element, onDelete}) => {
     </div>
   )
 }
-
-SortableConstructorElement.propTypes = {
-  index: number.isRequired,
-  element: ingredientType.isRequired,
-  onDelete: func.isRequired,
-};
 
 export default SortableConstructorElement;

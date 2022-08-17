@@ -1,13 +1,18 @@
 import ReactDOM from 'react-dom';
 import modalStyles from './modal.module.css';
 import {CloseIcon} from "@ya.praktikum/react-developer-burger-ui-components";
-import React, {useEffect} from "react";
+import React, {FC, SyntheticEvent, useEffect} from "react";
 import ModalOverlay from "./modal-overlay";
-import { node, string, func } from "prop-types";
-const modalRoot = document.getElementById("react-modals");
+const modalRoot = document.getElementById("react-modals")!;
 
-const Modal = ({ children, header, onClose }) => {
-  const handleEscClick = e => {
+interface IModalProps {
+  children: React.ReactNode;
+  header?: string;
+  onClose: () => void;
+}
+
+const Modal:FC<IModalProps> = ({ children, header, onClose }) => {
+  const handleEscClick = (e:KeyboardEvent):void => {
     if (e.key === "Escape") {
       onClose();
     }
@@ -22,7 +27,7 @@ const Modal = ({ children, header, onClose }) => {
       document.removeEventListener("keydown", handleEscClick, false);
     }
   }, []);
-  const onAnyClickInsideModal = e => {
+  const onAnyClickInsideModal = (e:SyntheticEvent) => {
     e.stopPropagation();
   }
 
@@ -41,11 +46,5 @@ const Modal = ({ children, header, onClose }) => {
     modalRoot
   );
 }
-
-Modal.propTypes = {
-  children: node.isRequired,
-  header: string,
-  onClose: func.isRequired
-};
 
 export default Modal;

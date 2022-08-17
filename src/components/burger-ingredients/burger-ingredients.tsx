@@ -1,17 +1,25 @@
-import { useState,useEffect } from 'react';
+import React, {useState, useEffect, FC, SyntheticEvent} from 'react';
 import burgerIngredientsStyles from './burger-ingredients.module.css';
-import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
+import { Tab as TabUI } from "@ya.praktikum/react-developer-burger-ui-components";
 import IngredientList from "./ingredient-list/ingredient-list";
 import { useSelector } from "react-redux";
+import {IIngredientsList, IRootStore} from "../../types/store";
 
-const BurgerIngredients = () => {
-  const ingredients = useSelector(store => store.burger.ingredients);
-  const [currentTab, setCurrentTab] = useState('one');
-  const [offsets, setOffsets] = useState([]);
+const Tab: React.FC<{
+  active: boolean;
+  value: string;
+  onClick: (value: string) => void;
+  children: React.ReactNode;
+}> = TabUI;
 
-  const calculateOffsets = () => {
-    const offs = [...document.querySelectorAll('.scroll h3')]
-      .map(cur => cur.offsetTop)
+const BurgerIngredients:FC = () => {
+  const ingredients = useSelector<IRootStore, IIngredientsList>(store => store.burger.ingredients);
+  const [currentTab, setCurrentTab] = useState<string>('one');
+  const [offsets, setOffsets] = useState<number[]>([]);
+
+  const calculateOffsets = ():void => {
+    const offs:number[] = [...document.querySelectorAll<HTMLHeadingElement>('.scroll h3')]
+      .map((cur:HTMLHeadingElement) => cur.offsetTop)
       .map((cur, _, arr) => cur - arr[0]);
     setOffsets(offs);
   }
@@ -28,8 +36,8 @@ const BurgerIngredients = () => {
     return () => window.removeEventListener('resize', calculateOffsets);
   }, [])
 
-  const onScroll = (e) => {
-    const curScroll = e.target.scrollTop;
+  const onScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const curScroll = (e.target as HTMLElement).scrollTop;
     if (curScroll < offsets[1]) {
       setCurrentTab('0');
     } else if (curScroll >= offsets[1] && curScroll < offsets[2]) {
@@ -39,8 +47,8 @@ const BurgerIngredients = () => {
     }
   }
 
-  const onTabClick = (value) => {
-    let el = document.querySelectorAll('.scroll h3')[value];
+  const onTabClick = (value:string) => {
+    let el = document.querySelectorAll<HTMLHeadingElement>('.scroll h3')[+value];
     el.scrollIntoView({behavior: "smooth"});
   }
 

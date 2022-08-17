@@ -1,31 +1,27 @@
-import {useState} from 'react';
 import { useHistory } from 'react-router-dom';
-import {
-  Button,
-  Input, PasswordInput
-} from "@ya.praktikum/react-developer-burger-ui-components";
+import { Input } from "@ya.praktikum/react-developer-burger-ui-components";
+import Button from "../components/button/button";
 import commonStyles from "./common.module.css";
 import {useDispatch} from "react-redux";
-import { resetPassword } from "../services/reducers/auth";
+import { forgetPassword } from "../services/reducers/auth";
 import {useForm} from "../hooks/useForm";
+import {FC, SyntheticEvent} from "react";
 
-export const ResetPasswordPage = () => {
+export const ForgotPasswordPage:FC = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const {values, handleChange} = useForm({
-    password: '',
-    token: '',
+    email: '',
   });
-
-  if (!history.location?.state?.fromForgotPassword) {
-    history.replace({ pathname: '/forgot-password' });
-  }
-
-  const onSubmit = async (e) => {
+  const onSubmit = async (e:SyntheticEvent) => {
     e.preventDefault();
-    const result = await dispatch(resetPassword(values))
+    //@ts-ignore
+    const result = await dispatch(forgetPassword(values))
     if (result.payload === true) {
-      history.replace({ pathname: '/login' });
+      history.push({
+        pathname: '/reset-password',
+        state: { fromForgotPassword: true }
+      });
     }
   }
   return (
@@ -33,24 +29,18 @@ export const ResetPasswordPage = () => {
       <h2 className='text text_type_main-medium mb-6'>Восстановление пароля</h2>
       <form className={commonStyles.form} onSubmit={onSubmit}>
         <div className='mb-6'>
-          <PasswordInput
-            placeholder={'Введите новый пароль'}
-            value={values.password}
-            onChange={handleChange}
-            name={'password'}
-          />
-        </div>
-        <div className='mb-6'>
           <Input
-            placeholder={'Введите код из письма'}
+            type={'email'}
+            placeholder={'E-mail'}
             onChange={handleChange}
-            value={values.token}
-            name={'token'}
+            value={values.email}
+            name={'email'}
+            error={false}
             errorText={'Ошибка'}
           />
         </div>
         <Button type="primary" size="large">
-          Сохранить
+          Восстановить
         </Button>
       </form>
       <div className={`${commonStyles.footerText} mt-20`}>

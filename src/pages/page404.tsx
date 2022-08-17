@@ -1,9 +1,9 @@
-import {useCallback} from 'react';
+import {FC, useCallback} from 'react';
 import { useHistory } from 'react-router-dom';
 import styles from './page404.module.css';
-import {Button} from "@ya.praktikum/react-developer-burger-ui-components";
+import Button from "../components/button/button";
 
-export const NotFound404 = () => {
+export const NotFound404:FC = () => {
   const history = useHistory();
   const onBackClick = useCallback(
     () => {

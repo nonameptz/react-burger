@@ -15,18 +15,25 @@ import {
   IngredientPage
 } from "../../pages";
 import appStyles from './app.module.css';
-import AppHeader from "../app-header/app-header";
-import {ProtectedRoute} from "../protected-route/protected-route";
-import {VisitorRoute} from "../visitor-route/visitor-route";
+import AppHeader from '../app-header/app-header';
+import ProtectedRoute from '../protected-route/protected-route';
+import VisitorRoute from '../visitor-route/visitor-route';
 import IngredientsDetails from '../ingredient-details/ingredient-details'
 import {fetchBurgers, unselectIngredient} from '../../services/reducers/burger';
-import Modal from "../modal/modal";
-import {useDispatch} from "react-redux";
-import {useEffect, useState} from "react";
+import Modal from '../modal/modal';
+import {useDispatch} from 'react-redux';
+import {useEffect} from 'react';
+import {Location} from "history";
+
+export interface ILocation {
+  from: Location;
+  background?: Location;
+  pathname: string;
+}
 
 function ModalSwitch() {
   const dispatch = useDispatch();
-  const location = useLocation();
+  const location = useLocation<ILocation>();
   const history = useHistory();
   const background = location.state && location.state.background;
 
@@ -77,13 +84,13 @@ function ModalSwitch() {
       )}
     </>
   );
-};
-
+}
 
 const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    //@ts-ignore
     dispatch(fetchBurgers());
   }, []);
   return (

@@ -1,26 +1,28 @@
-import {useState, useRef, useEffect} from 'react';
+import {FC, SyntheticEvent} from 'react';
 import { useHistory } from 'react-router-dom';
 import {
-  Button,
   Input,
   PasswordInput
 } from "@ya.praktikum/react-developer-burger-ui-components";
+import Button from "../components/button/button";
 import commonStyles from "./common.module.css";
 import {login} from "../services/reducers/auth";
 import {useDispatch, useSelector} from "react-redux";
 import {useForm} from "../hooks/useForm";
+import {IRootStore} from "../types/store";
 
-export const LoginPage = () => {
+export const LoginPage:FC = () => {
   const dispatch = useDispatch();
-  const { isError, errorMsg } = useSelector(store => store.auth)
-  const history = useHistory();
+  const { isError, errorMsg } = useSelector<IRootStore, {isError: boolean, errorMsg: string}>(store => store.auth)
+  const history = useHistory<any>();
   const from = history.location?.state?.from;
   const {values, handleChange} = useForm({
     password: '',
     email: '',
   });
-  const onSubmit = async (e) => {
+  const onSubmit = async (e:SyntheticEvent) => {
     e.preventDefault();
+    //@ts-ignore
     const response = await dispatch(login(values));
 
     if (!response.error && !response.payload?.message) {

@@ -1,20 +1,20 @@
-import {useEffect, useState} from 'react';
+import {FC, useEffect, useState} from 'react';
 import { useHistory } from 'react-router-dom';
 import {
-  Button,
   Input, PasswordInput
 } from "@ya.praktikum/react-developer-burger-ui-components";
+import Button from "../components/button/button";
 import { register } from '../services/reducers/auth';
 import commonStyles from "./common.module.css";
 import {useDispatch} from "react-redux";
 
-export const RegisterPage = () => {
+export const RegisterPage:FC = () => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState(false);
+  const [name, setName] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [error, setError] = useState<boolean>(false);
 
   useEffect(() => {
     if (!name || !email || !password) {
@@ -25,6 +25,7 @@ export const RegisterPage = () => {
   }, [name, email, password])
 
   const onRegiserClick = () => {
+    //@ts-ignore
     dispatch(register({name, email, password}));
     history.replace({ pathname: '/login' });
   }
@@ -55,7 +56,6 @@ export const RegisterPage = () => {
       </div>
       <div className='mb-6'>
         <PasswordInput
-          placeholder={'Пароль'}
           value={password}
           onChange={e => setPassword(e.target.value)}
           name={'password'}
