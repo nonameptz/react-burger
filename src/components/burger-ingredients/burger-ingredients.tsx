@@ -1,4 +1,4 @@
-import React, {useState, useEffect, FC, SyntheticEvent} from 'react';
+import React, {useState, useEffect, FC} from 'react';
 import burgerIngredientsStyles from './burger-ingredients.module.css';
 import { Tab as TabUI } from "@ya.praktikum/react-developer-burger-ui-components";
 import IngredientList from "./ingredient-list/ingredient-list";

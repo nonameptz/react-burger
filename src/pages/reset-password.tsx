@@ -1,4 +1,4 @@
-import {FC, SyntheticEvent, useState} from 'react';
+import {FC, SyntheticEvent} from 'react';
 import { useHistory } from 'react-router-dom';
 import { Input, PasswordInput } from "@ya.praktikum/react-developer-burger-ui-components";
 import Button from "../components/button/button";

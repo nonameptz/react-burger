@@ -1,0 +1,9 @@
+.orders {
+    flex-direction: column;
+}
+.ordersList {
+    width: 100%;
+    height: 716px;
+    overflow-y: scroll;
+    padding-right: 10px;
+}

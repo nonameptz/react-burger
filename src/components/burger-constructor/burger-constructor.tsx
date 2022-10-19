@@ -1,4 +1,4 @@
-import {FC, SyntheticEvent, useState} from 'react';
+import {FC, useState} from 'react';
 import {
   ConstructorElement,
   CurrencyIcon

@@ -1,0 +1,39 @@
+.mainContent {
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    display: flex;
+    flex-direction: row;
+}
+
+.feedList {
+    width: 50%;
+}
+
+.rightPanel {
+    flex-direction: column;
+    width: 50%;
+}
+
+.ordersInfo {
+    display: flex;
+    flex-direction: row;
+}
+
+.ordersInfoSection {
+    overflow: hidden;
+    width: 50%;
+}
+
+.ordersInfoSectionList {
+    height: 235px;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+.orderDone {
+    color: #00CCCC;
+    width: 60px;
+}

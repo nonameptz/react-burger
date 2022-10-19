@@ -9,11 +9,11 @@ import commonStyles from "./common.module.css";
 import {login} from "../services/reducers/auth";
 import {useDispatch, useSelector} from "react-redux";
 import {useForm} from "../hooks/useForm";
-import {IRootStore} from "../types/store";
+import {IAuthStore, IRootStore} from "../types/store";
 
 export const LoginPage:FC = () => {
   const dispatch = useDispatch();
-  const { isError, errorMsg } = useSelector<IRootStore, {isError: boolean, errorMsg: string}>(store => store.auth)
+  const { isError, errorMsg } = useSelector<IRootStore, IAuthStore>(store => store.auth)
   const history = useHistory<any>();
   const from = history.location?.state?.from;
   const {values, handleChange} = useForm({

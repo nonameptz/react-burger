@@ -4,7 +4,9 @@ import {Tab as TabUI} from "@ya.praktikum/react-developer-burger-ui-components";
 import profileStyles from './profile.module.css';
 import {ProfileInfo} from "../components/profile-info/profile-info";
 import {logout} from "../services/reducers/auth";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import FeedList from "../components/feed-list/feed-list";
+import {IOrdersStore, IRootStore} from "../types/store";
 
 const Tab: React.FC<{
   active: boolean;
@@ -14,6 +16,7 @@ const Tab: React.FC<{
 }> = TabUI;
 
 export const ProfilePage:FC = () => {
+  const { orderList } = useSelector<IRootStore, IOrdersStore>(store => store.orders);
   const dispatch = useDispatch();
   const history = useHistory();
   const { path } = useRouteMatch();
@@ -59,7 +62,7 @@ export const ProfilePage:FC = () => {
             <ProfileInfo />
           </Route>
           <Route path="/profile/orders" exact={true}>
-            TBD: Orders will be here
+            <FeedList urlPrefix='/profile/orders/' orderList={orderList} />
           </Route>
         </Switch>
       </div>

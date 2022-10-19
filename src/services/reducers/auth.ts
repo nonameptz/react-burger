@@ -5,6 +5,7 @@ import {
 } from '../../utils/initStates';
 import checkResponse from '../../utils/checkResponse';
 import {getCookie, setCookie, deleteCookie} from '../../utils/cookie';
+import {AppDispatch} from "./root";
 
 export const forgetPassword = createAsyncThunk(
   'auth/forget-password',
@@ -27,8 +28,9 @@ export const forgetPassword = createAsyncThunk(
   }
 );
 
-export const resetPassword = createAsyncThunk(
+export const resetPassword = createAsyncThunk<boolean, {password:string, token:string}, any>(
   'auth/reset-password',
+  // @ts-ignore
   async ({password, token}, thunkApi) => {
     try {
       const response = await fetch(`${API_DOMAIN}api/password-reset/reset`, {
@@ -48,8 +50,9 @@ export const resetPassword = createAsyncThunk(
   }
 );
 
-export const register = createAsyncThunk(
+export const register = createAsyncThunk<{user: {name:string, email:string}, refreshToken:string, accessToken:string, message?:string }, {password:string, token:string, email:string}, any>(
   'auth/register',
+  // @ts-ignore
   async ({password, name, email}, thunkApi) => {
     try {
       const response = await fetch(`${API_DOMAIN}api/auth/register`, {
@@ -69,8 +72,9 @@ export const register = createAsyncThunk(
 );
 
 
-export const login = createAsyncThunk(
+export const login = createAsyncThunk<{user: {name:string, email:string}, refreshToken:string, accessToken:string, message?:string }, {password:string, token:string, email:string}, any>(
   'auth/login',
+  // @ts-ignore
   async ({password, email}, thunkApi) => {
     try {
       const response = await fetch(`${API_DOMAIN}api/auth/login`, {
@@ -125,7 +129,7 @@ export const refreshTokenRequest = () => {
     .then(checkResponse)
 }
 
-export const refreshToken = (afterRefresh) => (dispatch) => {
+export const refreshToken = (afterRefresh:()=>{}) => (dispatch:AppDispatch) => {
   refreshTokenRequest()
     .then((res) => {
       localStorage.setItem('refreshToken', res.refreshToken);
@@ -134,8 +138,9 @@ export const refreshToken = (afterRefresh) => (dispatch) => {
     })
 };
 
-export const getUser = createAsyncThunk(
+export const getUser = createAsyncThunk<{user: {name:string, email:string}, refreshToken:string, accessToken:string, message?:string }, any, any>(
   'auth/get-user',
+  //@ts-ignore
   async (_, thunkApi) => {
     try {
       const response = await fetch(`${API_DOMAIN}api/auth/user`, {
@@ -147,8 +152,9 @@ export const getUser = createAsyncThunk(
       });
       const data = await checkResponse(response)
       return data;
-    } catch (error) {
+    } catch (error:any) {
       if (error.message === 'jwt expired') {
+        //@ts-ignore
         thunkApi.dispatch(refreshToken(getUser()));
       }
       return thunkApi.rejectWithValue({
@@ -158,8 +164,9 @@ export const getUser = createAsyncThunk(
   }
 );
 
-export const setUser = createAsyncThunk(
+export const setUser = createAsyncThunk<{user: {name:string, email:string}, refreshToken:string, accessToken:string, message?:string }, any, any>(
   'auth/set-user',
+  // @ts-ignore
   async ({name, email}, thunkApi) => {
     try {
       const response = await fetch(`${API_DOMAIN}api/auth/user`, {
@@ -172,8 +179,9 @@ export const setUser = createAsyncThunk(
       });
       const data = await checkResponse(response)
       return data;
-    } catch (error) {
+    } catch (error:any) {
       if (error.message === 'jwt expired') {
+        // @ts-ignore
         thunkApi.dispatch(refreshToken(getUser()));
       }
       return thunkApi.rejectWithValue({
@@ -204,7 +212,7 @@ export const authSlice = createSlice({
         localStorage.setItem('refreshToken', action.payload.refreshToken);
         setCookie('accessToken', action.payload.accessToken, 2);
       })
-      .addCase(register.rejected, (state, action) => {
+      .addCase(register.rejected, (state, action:{payload:any}) => {
         state.isError = true;
         if (action.payload?.message) {
           state.errorMsg = action.payload?.message;
@@ -227,7 +235,7 @@ export const authSlice = createSlice({
           state.errorMsg = 'Ошибка авторизации';
         }
       })
-      .addCase(login.rejected, (state, action) => {
+      .addCase(login.rejected, (state, action:{payload:any}) => {
         state.isError = true;
         if (action.payload?.message?.message) {
           state.errorMsg = action.payload?.message?.message;
@@ -247,7 +255,7 @@ export const authSlice = createSlice({
         state.isLoggedIn = false;
         deleteCookie('accessToken');
       })
-      .addCase(logout.rejected, (state, action) => {
+      .addCase(logout.rejected, (state, action:{payload:any}) => {
         state.isError = true;
         if (action.payload?.message) {
           state.errorMsg = action.payload?.message;
@@ -265,7 +273,7 @@ export const authSlice = createSlice({
           state.isError = false;
           state.errorMsg = '';
         })
-        .addCase(getUser.rejected, (state, action) => {
+        .addCase(getUser.rejected, (state, action:{payload:any}) => {
           state.isError = true;
           if (action.payload?.message) {
             state.errorMsg = action.payload?.message;
@@ -282,7 +290,7 @@ export const authSlice = createSlice({
           state.isError = false;
           state.errorMsg = '';
         })
-        .addCase(setUser.rejected, (state, action) => {
+        .addCase(setUser.rejected, (state, action:{payload:any}) => {
           state.isError = true;
           if (action.payload?.message) {
             state.errorMsg = action.payload?.message;
