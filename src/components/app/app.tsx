@@ -24,10 +24,9 @@ import IngredientsDetails from '../ingredient-details/ingredient-details'
 import FeedDetails from '../feed-details/feed-details'
 import {fetchBurgers, unselectIngredient} from '../../services/reducers/burger';
 import Modal from '../modal/modal';
-import {useDispatch} from 'react-redux';
+import {useDispatch} from '../../types/dispatch';
 import {useEffect} from 'react';
 import {Location} from "history";
-import { WS_ORDERS_ALL_CONNECTION_START, WS_ORDERS_CONNECTION_START } from "../../types/actionTypes";
 
 export interface ILocation {
   from: Location;
@@ -125,10 +124,7 @@ const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    //@ts-ignore
     dispatch(fetchBurgers());
-    dispatch({ type: WS_ORDERS_ALL_CONNECTION_START });
-    dispatch({ type: WS_ORDERS_CONNECTION_START });
   }, []);
   return (
     <div className={appStyles.app}>

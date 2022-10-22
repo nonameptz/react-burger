@@ -7,40 +7,36 @@ import {
   WS_ORDERS_CONNECTION_ERROR,
   WS_ORDERS_CONNECTION_START,
   WS_ORDERS_CONNECTION_SUCCESS,
-  WS_ORDERS_GET_MESSAGE,
   WS_ORDERS_ALL_CONNECTION_CLOSED,
   WS_ORDERS_ALL_CONNECTION_ERROR,
   WS_ORDERS_ALL_CONNECTION_START,
   WS_ORDERS_ALL_CONNECTION_SUCCESS,
-  WS_ORDERS_ALL_GET_MESSAGE,
 } from '../types/actionTypes';
-import {getCookie} from "../utils/cookie";
 
+import { addOrUpdateOrders, addOrUpdateAllOrders } from './reducers/orders'
 const ordersAllWSUrl = 'wss://norma.nomoreparties.space/orders/all';
 const ordersAllActions = {
   wsInit: WS_ORDERS_ALL_CONNECTION_START,
-  onMessage: WS_ORDERS_ALL_GET_MESSAGE,
   onOpen: WS_ORDERS_ALL_CONNECTION_SUCCESS,
   onClose: WS_ORDERS_ALL_CONNECTION_CLOSED,
   onError: WS_ORDERS_ALL_CONNECTION_ERROR,
+  onMessageAction: addOrUpdateAllOrders,
 };
-let accessToken = getCookie('accessToken');
-if (accessToken) {
-  accessToken = accessToken.split('Bearer ')[1];
-}
-const ordersWSUrl = `wss://norma.nomoreparties.space/orders?token=${accessToken}`;
+const ordersWSUrl = `wss://norma.nomoreparties.space/orders`;
 const ordersActions = {
   wsInit: WS_ORDERS_CONNECTION_START,
-  onMessage: WS_ORDERS_GET_MESSAGE,
   onOpen: WS_ORDERS_CONNECTION_SUCCESS,
   onClose: WS_ORDERS_CONNECTION_CLOSED,
   onError: WS_ORDERS_CONNECTION_ERROR,
+  onMessageAction: addOrUpdateOrders,
 };
 
 const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(
+    getDefaultMiddleware({
+      serializableCheck: false
+    }).concat(
       socketMiddleware(ordersAllWSUrl, ordersAllActions),
       socketMiddleware(ordersWSUrl, ordersActions),
     ),

@@ -14,6 +14,10 @@ export function getCookie(cname:string):string {
   return "";
 }
 
+export function getCleanCookie(cname:string):string {
+  return getCookie(cname).split('Bearer ')[1] || '';
+}
+
 export function setCookie(cname:string, cvalue:string, exdays:number) {
   const d = new Date();
   d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));

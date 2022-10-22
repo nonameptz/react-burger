@@ -9,7 +9,7 @@ import {AppDispatch} from "./root";
 
 export const forgetPassword = createAsyncThunk(
   'auth/forget-password',
-  async (email, thunkApi) => {
+  async (email:string, thunkApi) => {
     try {
       const response = await fetch(`${API_DOMAIN}api/password-reset`, {
         method: 'POST',
@@ -50,7 +50,7 @@ export const resetPassword = createAsyncThunk<boolean, {password:string, token:s
   }
 );
 
-export const register = createAsyncThunk<{user: {name:string, email:string}, refreshToken:string, accessToken:string, message?:string }, {password:string, token:string, email:string}, any>(
+export const register = createAsyncThunk<{user: {name:string, email:string}, refreshToken:string, accessToken:string, message?:string }, {name: string, password:string, token?:string, email:string}, any>(
   'auth/register',
   // @ts-ignore
   async ({password, name, email}, thunkApi) => {
@@ -72,7 +72,7 @@ export const register = createAsyncThunk<{user: {name:string, email:string}, ref
 );
 
 
-export const login = createAsyncThunk<{user: {name:string, email:string}, refreshToken:string, accessToken:string, message?:string }, {password:string, token:string, email:string}, any>(
+export const login = createAsyncThunk<any, {password:string, token:string, email:string}, any>(
   'auth/login',
   // @ts-ignore
   async ({password, email}, thunkApi) => {
@@ -138,7 +138,7 @@ export const refreshToken = (afterRefresh:()=>{}) => (dispatch:AppDispatch) => {
     })
 };
 
-export const getUser = createAsyncThunk<{user: {name:string, email:string}, refreshToken:string, accessToken:string, message?:string }, any, any>(
+export const getUser = createAsyncThunk<{user: {name:string, email:string}, refreshToken:string, accessToken:string, message?:string }, void, any>(
   'auth/get-user',
   //@ts-ignore
   async (_, thunkApi) => {

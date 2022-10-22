@@ -1,14 +1,25 @@
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from '../types/dispatch';
 import feedListPageStyles from "./feed-list.module.css";
 import React, {FC, useEffect, useState} from "react";
-import {IBurgerStore, IOrdersStore, IRootStore} from "../types/store";
+import {IBurgerStore, IOrdersStore} from "../types/store";
 import FeedList from "../components/feed-list/feed-list";
+import {
+  WS_ORDERS_ALL_CONNECTION_CLOSED,
+  WS_ORDERS_ALL_CONNECTION_START
+} from "../types/actionTypes";
 
 export const FeedListPage:FC = () => {
-  const { isLoaded } = useSelector<IRootStore, IBurgerStore>(store => store.burger);
-  const { allOrderList, total, totalToday } = useSelector<IRootStore, IOrdersStore>(store => store.orders);
+  const dispatch = useDispatch();
+  const { isLoaded } = useSelector<IBurgerStore>(store => store.burger);
+  const { allOrderList, total, totalToday } = useSelector<IOrdersStore>(store => store.orders);
   const [doneOrders, setDoneOrders] = useState<Array<number>>([0]);
   const [inProgressOrders, setInProgressOrders] = useState<Array<number>>([0]);
+  useEffect(() => {
+    dispatch({ type: WS_ORDERS_ALL_CONNECTION_START });
+    return () => {
+      dispatch({ type: WS_ORDERS_ALL_CONNECTION_CLOSED });
+    }
+  }, []);
   useEffect(() => {
     if (allOrderList.length) {
       setDoneOrders(allOrderList

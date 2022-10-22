@@ -1,15 +1,15 @@
 import {Route, Redirect, useLocation, RouteProps} from 'react-router-dom';
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch, useSelector} from '../../types/dispatch'
 import {getUser} from "../../services/reducers/auth";
 import {FC, useEffect, useState} from "react";
-import {IRootStore} from "../../types/store";
+import {IAuthStore} from "../../types/store";
 
 interface IProtectedRouteProps {
   children: React.ReactNode;
 }
 
 const ProtectedRoute:FC<IProtectedRouteProps & RouteProps> = ({ children, ...rest }) => {
-  const isLoggedIn = useSelector<IRootStore, boolean>(store => store.auth.isLoggedIn);
+  const { isLoggedIn } = useSelector<IAuthStore>(store => store.auth);
   const {pathname} = useLocation();
   const dispatch = useDispatch();
   const [isUserLoaded, setUserLoaded] = useState<boolean>(false);

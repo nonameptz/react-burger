@@ -19,7 +19,7 @@ const OrderPreview:FC<IOrderPreviewProps> = ({urlPrefix, order}) => {
   const history = useHistory();
   const location = useLocation();
   const {ingredients: ingredientsList, isLoaded} = useSelector<IRootStore, IBurgerStore>(store => store.burger);
-  const [ingredients, setIngredients] = useState(['']);
+  const [ingredients, setIngredients] = useState<string[]>([]);
   const [moreIngredients, setMoreIngredients] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
 
@@ -32,7 +32,7 @@ const OrderPreview:FC<IOrderPreviewProps> = ({urlPrefix, order}) => {
       return ing.image_mobile || ing.image;
     }));
     setTotalPrice(tempTotal);
-  }, [])
+  }, [order.ingredients])
   if (ingredients.length > 6) {
     setMoreIngredients(ingredients.length - 6);
     setIngredients(ingredients.slice(0, 6))
@@ -72,7 +72,7 @@ const OrderPreview:FC<IOrderPreviewProps> = ({urlPrefix, order}) => {
       </p>
       <div className={`${orderPreviewStyles.infoBox} flex`}>
         <div className={orderPreviewStyles.ingredientPreviewList}>
-          {ingredients.map((ingSrc, index) => {
+          {ingredients.length && ingredients.map((ingSrc, index) => {
             const showMore = moreIngredients > 0 && (index === ingredients.length - 1);
             return (
               <div className={orderPreviewStyles.ingredientPreview}

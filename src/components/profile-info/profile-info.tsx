@@ -2,13 +2,13 @@ import {FC, SyntheticEvent, useEffect} from "react";
 import { Input } from "@ya.praktikum/react-developer-burger-ui-components";
 import Button from "../button/button";
 import {getUser, setUser} from "../../services/reducers/auth";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch, useSelector} from '../../types/dispatch';
 import {TProfileInfoForm, useForm} from "../../hooks/useForm";
-import {IRootStore} from "../../types/store";
+import {IAuthStore} from "../../types/store";
 
 export const ProfileInfo:FC = () => {
   const dispatch = useDispatch();
-  const { name, email } = useSelector<IRootStore, {name: string, email: string}>(store => store.auth);
+  const { name, email } = useSelector<IAuthStore>(store => store.auth);
 
   const {values, handleChange} = useForm<TProfileInfoForm>({
     name,
@@ -17,13 +17,11 @@ export const ProfileInfo:FC = () => {
   });
 
   useEffect(() => {
-    //@ts-ignore
     dispatch(getUser());
   }, [])
 
   const onSubmit = (e:SyntheticEvent):void => {
     e.preventDefault();
-    //@ts-ignore
     dispatch(setUser({ name: values.name, email: values.email }));
   }
 

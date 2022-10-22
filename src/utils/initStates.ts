@@ -57,7 +57,9 @@ export const inititalOrder = {
   number: 0,
   createdAt: '',
   updatedAt: '',
-  ingredients: [''],
+  ingredients: [],
+  ingredientsList: {},
+  total: 0,
 };
 
 export const initialOrderState = {

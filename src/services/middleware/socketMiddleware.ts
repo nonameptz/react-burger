@@ -1,10 +1,6 @@
-import { addOrUpdateOrders, addOrUpdateAllOrders } from '../reducers/orders'
-import {
-  WS_ORDERS_ALL_GET_MESSAGE,
-  WS_ORDERS_GET_MESSAGE
-} from '../../types/actionTypes'
 import {RootState} from '../reducers/root';
 import {Middleware} from "redux";
+import {ActionCreatorWithPayload} from "@reduxjs/toolkit";
 
 export const socketMiddleware = (
   wsUrl:string,
@@ -13,7 +9,7 @@ export const socketMiddleware = (
     onOpen:string,
     onClose:string,
     onError:string,
-    onMessage:string,
+    onMessageAction:ActionCreatorWithPayload<any>,
   }): Middleware<{}, RootState> => {
   return store => {
     let socket:WebSocket | null = null;
@@ -21,10 +17,10 @@ export const socketMiddleware = (
     return next => {
       return action => {
         const {dispatch} = store;
-        const {type} = action;
-        const {wsInit, onOpen, onClose, onError, onMessage} = wsActions;
+        const {type, payload} = action;
+        const {wsInit, onOpen, onClose, onError, onMessageAction} = wsActions;
         if (type === wsInit) {
-          socket = new WebSocket(wsUrl);
+          socket = new WebSocket(`${wsUrl}${payload || ''}`);
         }
         if (socket) {
           socket.onopen = event => {
@@ -39,13 +35,7 @@ export const socketMiddleware = (
             const {data} = event;
             const parsedData = JSON.parse(data);
 
-            if (onMessage === WS_ORDERS_GET_MESSAGE) {
-              //@ts-ignore
-              dispatch(addOrUpdateOrders(parsedData));
-            } else if (onMessage === WS_ORDERS_ALL_GET_MESSAGE) {
-              //@ts-ignore
-              dispatch(addOrUpdateAllOrders(parsedData));
-            }
+            dispatch(onMessageAction(parsedData));
           };
 
           socket.onclose = event => {

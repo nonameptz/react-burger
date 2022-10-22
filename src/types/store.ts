@@ -47,6 +47,12 @@ export type TOrderPreview = {
   number: number,
   createdAt: string,
   updatedAt: string,
+  total?: number,
+  ingredientsList: {
+    [id:string]: IIngredient & {
+      amount?: number;
+    }
+  }
 }
 
 export interface IOrdersStore {

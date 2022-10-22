@@ -29,7 +29,7 @@ export const fetchBurgers = createAsyncThunk(
 
 export const setOrder = createAsyncThunk(
   'burger/order',
-  async (ingredients, thunkApi) => {
+  async (ingredients:string[], thunkApi) => {
     try {
       const token = getCookie('accessToken');
       const response = await fetch(`${API_DOMAIN}api/orders`, {

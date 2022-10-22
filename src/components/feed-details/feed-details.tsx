@@ -1,14 +1,17 @@
 import feedDetailsStyles from "./feed-details.module.css";
 import {useSelector} from "react-redux";
 import {useParams} from "react-router-dom";
-import React, {FC, useEffect, useState} from "react";
-import {IBurgerStore, IOrdersStore, IRootStore} from "../../types/store";
+import React, {FC} from "react";
+import {
+  IBurgerStore,
+  IOrdersStore,
+  IRootStore
+} from "../../types/store";
 import {getOrder} from "../../utils/getOrder";
 import IngredientPreview from "../ingredient-preview/ingredient-preview";
 import ingredientPreviewStyles
   from "../ingredient-preview/ingredient-preview.module.css";
 import {CurrencyIcon} from "@ya.praktikum/react-developer-burger-ui-components";
-import {getIngredient} from "../../utils/getIngredient";
 
 type TFeedParams = {
   id: string;
@@ -22,17 +25,9 @@ const FeedDetails:FC<TFeedProps> = ({isPrivate = false}) => {
   const { allOrderList, orderList } = useSelector<IRootStore, IOrdersStore>(store => store.orders);
   const {ingredients} = useSelector<IRootStore, IBurgerStore>(store => store.burger);
 
-  const [totalPrice, setTotalPrice] = useState(0);
-  const order = getOrder(isPrivate ? orderList : allOrderList, +id);
-  useEffect(() => {
-    setTotalPrice(0);
-    let tempTotal = 0
-    order.ingredients.forEach((id) => {
-      let ing = getIngredient(ingredients, id);
-      tempTotal += ing.price
-    });
-    setTotalPrice(tempTotal);
-  }, [])
+  console.log(allOrderList, orderList);
+
+  const order = getOrder(isPrivate ? orderList : allOrderList, +id, ingredients);
   const date = new Date(order.createdAt).toLocaleDateString('ru-RU', {
     weekday: 'long',
     year: 'numeric',
@@ -54,9 +49,8 @@ const FeedDetails:FC<TFeedProps> = ({isPrivate = false}) => {
         Состав:
       </h3>
       <div className={`${feedDetailsStyles.ordersList} scroll`}>
-        {order.ingredients
-          .map((id, index) => (
-          <IngredientPreview key={index} id={id} />
+        {[...new Set(order.ingredients)].map((id, index) => (
+          <IngredientPreview key={index} ingData={order.ingredientsList[id]} />
         ))}
       </div>
       <div className={`${feedDetailsStyles.footer} mt-10`}>
@@ -64,7 +58,7 @@ const FeedDetails:FC<TFeedProps> = ({isPrivate = false}) => {
           {date}
         </p>
         <div className={`text text_type_digits-default flex ${ingredientPreviewStyles.totalPrice}`}>
-          {totalPrice}
+          {order.total}
           <CurrencyIcon type="primary" />
         </div>
       </div>
