@@ -5,7 +5,6 @@ import {
 } from '../../utils/initStates';
 import checkResponse from '../../utils/checkResponse';
 import {getCookie, setCookie, deleteCookie} from '../../utils/cookie';
-import {AppDispatch} from "./root";
 
 export const forgetPassword = createAsyncThunk(
   'auth/forget-password',
@@ -28,10 +27,9 @@ export const forgetPassword = createAsyncThunk(
   }
 );
 
-export const resetPassword = createAsyncThunk<boolean, {password:string, token:string}, any>(
+export const resetPassword = createAsyncThunk(
   'auth/reset-password',
-  // @ts-ignore
-  async ({password, token}, thunkApi) => {
+  async ({password, token}:{password:string, token:string}, thunkApi) => {
     try {
       const response = await fetch(`${API_DOMAIN}api/password-reset/reset`, {
         method: 'POST',
@@ -50,10 +48,9 @@ export const resetPassword = createAsyncThunk<boolean, {password:string, token:s
   }
 );
 
-export const register = createAsyncThunk<{user: {name:string, email:string}, refreshToken:string, accessToken:string, message?:string }, {name: string, password:string, token?:string, email:string}, any>(
+export const register = createAsyncThunk(
   'auth/register',
-  // @ts-ignore
-  async ({password, name, email}, thunkApi) => {
+  async ({password, name, email}:{password:string, name:string, email:string}, thunkApi) => {
     try {
       const response = await fetch(`${API_DOMAIN}api/auth/register`, {
         method: 'POST',
@@ -72,10 +69,9 @@ export const register = createAsyncThunk<{user: {name:string, email:string}, ref
 );
 
 
-export const login = createAsyncThunk<any, {password:string, token:string, email:string}, any>(
+export const login = createAsyncThunk(
   'auth/login',
-  // @ts-ignore
-  async ({password, email}, thunkApi) => {
+  async ({password, email}:{password:string, email:string}, thunkApi) => {
     try {
       const response = await fetch(`${API_DOMAIN}api/auth/login`, {
         method: 'POST',
@@ -129,18 +125,8 @@ export const refreshTokenRequest = () => {
     .then(checkResponse)
 }
 
-export const refreshToken = (afterRefresh:()=>{}) => (dispatch:AppDispatch) => {
-  refreshTokenRequest()
-    .then((res) => {
-      localStorage.setItem('refreshToken', res.refreshToken);
-      setCookie('accessToken', res.accessToken, 2);
-      dispatch(afterRefresh);
-    })
-};
-
-export const getUser = createAsyncThunk<{user: {name:string, email:string}, refreshToken:string, accessToken:string, message?:string }, void, any>(
+export const getUser = createAsyncThunk(
   'auth/get-user',
-  //@ts-ignore
   async (_, thunkApi) => {
     try {
       const response = await fetch(`${API_DOMAIN}api/auth/user`, {
@@ -154,8 +140,12 @@ export const getUser = createAsyncThunk<{user: {name:string, email:string}, refr
       return data;
     } catch (error:any) {
       if (error.message === 'jwt expired') {
-        //@ts-ignore
-        thunkApi.dispatch(refreshToken(getUser()));
+        refreshTokenRequest()
+          .then((res) => {
+            localStorage.setItem('refreshToken', res.refreshToken);
+            setCookie('accessToken', res.accessToken, 2);
+            thunkApi.dispatch(getUser());
+          })
       }
       return thunkApi.rejectWithValue({
         message: 'Ошибка при получение данных о пользователе.'
@@ -164,10 +154,9 @@ export const getUser = createAsyncThunk<{user: {name:string, email:string}, refr
   }
 );
 
-export const setUser = createAsyncThunk<{user: {name:string, email:string}, refreshToken:string, accessToken:string, message?:string }, any, any>(
+export const setUser = createAsyncThunk(
   'auth/set-user',
-  // @ts-ignore
-  async ({name, email}, thunkApi) => {
+  async ({name, email}:{name:string, email:string}, thunkApi) => {
     try {
       const response = await fetch(`${API_DOMAIN}api/auth/user`, {
         method: 'PATCH',
@@ -181,8 +170,12 @@ export const setUser = createAsyncThunk<{user: {name:string, email:string}, refr
       return data;
     } catch (error:any) {
       if (error.message === 'jwt expired') {
-        // @ts-ignore
-        thunkApi.dispatch(refreshToken(getUser()));
+        refreshTokenRequest()
+          .then((res) => {
+            localStorage.setItem('refreshToken', res.refreshToken);
+            setCookie('accessToken', res.accessToken, 2);
+            thunkApi.dispatch(setUser({name, email}));
+          })
       }
       return thunkApi.rejectWithValue({
         message: 'Ошибка при обновлении данных о пользователе.'
@@ -206,11 +199,11 @@ export const authSlice = createSlice({
       .addCase(register.pending, (state) => {
         state.isError = false;
       })
-      .addCase(register.fulfilled, (state, action) => {
-        state.name = action.payload.user.name;
-        state.email = action.payload.user.email;
-        localStorage.setItem('refreshToken', action.payload.refreshToken);
-        setCookie('accessToken', action.payload.accessToken, 2);
+      .addCase(register.fulfilled, (state, action:{payload:any}) => {
+        state.name = action?.payload?.user.name;
+        state.email = action?.payload?.user.email;
+        localStorage.setItem('refreshToken', action?.payload?.refreshToken || '');
+        setCookie('accessToken', action?.payload?.accessToken || '', 2);
       })
       .addCase(register.rejected, (state, action:{payload:any}) => {
         state.isError = true;
@@ -223,7 +216,7 @@ export const authSlice = createSlice({
       .addCase(login.pending, (state) => {
         state.isError = false;
       })
-      .addCase(login.fulfilled, (state, action) => {
+      .addCase(login.fulfilled, (state, action:{payload:any}) => {
         if (action.payload) {
           state.name = action.payload.user.name;
           state.email = action.payload.user.email;
@@ -266,7 +259,7 @@ export const authSlice = createSlice({
         .addCase(getUser.pending, (state) => {
           state.isError = false;
         })
-        .addCase(getUser.fulfilled, (state, action) => {
+        .addCase(getUser.fulfilled, (state, action:{payload:any}) => {
           state.name = action.payload.user.name;
           state.email = action.payload.user.email;
           state.isLoggedIn = true;
@@ -284,7 +277,7 @@ export const authSlice = createSlice({
         .addCase(setUser.pending, (state) => {
           state.isError = false;
         })
-        .addCase(setUser.fulfilled, (state, action) => {
+        .addCase(setUser.fulfilled, (state, action:{payload:any}) => {
           state.name = action.payload.user.name;
           state.email = action.payload.user.email;
           state.isError = false;

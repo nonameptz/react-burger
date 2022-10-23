@@ -1,7 +1,6 @@
 import {useDispatch, useSelector} from '../types/dispatch';
 import feedListPageStyles from "./feed-list.module.css";
 import React, {FC, useEffect, useState} from "react";
-import {IBurgerStore, IOrdersStore} from "../types/store";
 import FeedList from "../components/feed-list/feed-list";
 import {
   WS_ORDERS_ALL_CONNECTION_CLOSED,
@@ -10,10 +9,10 @@ import {
 
 export const FeedListPage:FC = () => {
   const dispatch = useDispatch();
-  const { isLoaded } = useSelector<IBurgerStore>(store => store.burger);
-  const { allOrderList, total, totalToday } = useSelector<IOrdersStore>(store => store.orders);
-  const [doneOrders, setDoneOrders] = useState<Array<number>>([0]);
-  const [inProgressOrders, setInProgressOrders] = useState<Array<number>>([0]);
+  const { isLoaded } = useSelector(store => store.burger);
+  const { allOrderList, total, totalToday } = useSelector(store => store.orders);
+  const [doneOrders, setDoneOrders] = useState<Array<{number:number; _id:string}>>([]);
+  const [inProgressOrders, setInProgressOrders] = useState<Array<{number:number; _id:string}>>([]);
   useEffect(() => {
     dispatch({ type: WS_ORDERS_ALL_CONNECTION_START });
     return () => {
@@ -24,12 +23,18 @@ export const FeedListPage:FC = () => {
     if (allOrderList.length) {
       setDoneOrders(allOrderList
         .filter(item => item.status === 'done')
-        .map(item => item.number)
+        .map(item => ({
+          number: item.number,
+          _id: item._id
+        }))
         .splice(0, 10)
       );
       setInProgressOrders(allOrderList
         .filter(item => item.status === 'created')
-        .map(item => item.number)
+        .map(item => ({
+          number: item.number,
+          _id: item._id
+        }))
         .splice(0, 10)
       );
     }
@@ -50,9 +55,9 @@ export const FeedListPage:FC = () => {
             <div className={feedListPageStyles.ordersInfoSection}>
               <h3 className='text text_type_main-medium mb-6'>Готовы:</h3>
               <div className={`flex ${feedListPageStyles.ordersInfoSectionList}`}>
-                {doneOrders.map((order, index) => (
-                  <p key={index} className={`mb-5 text text_type_digits-default ${feedListPageStyles.orderDone}`}>
-                    {order}
+                {doneOrders.map((order) => (
+                  <p key={order._id} className={`mb-5 text text_type_digits-default ${feedListPageStyles.orderDone}`}>
+                    {order.number}
                   </p>
                 ))}
               </div>
@@ -60,9 +65,9 @@ export const FeedListPage:FC = () => {
             <div className={feedListPageStyles.ordersInfoSection}>
               <h3 className='text text_type_main-medium mb-6'>В работе:</h3>
               <div className={`flex ${feedListPageStyles.ordersInfoSectionList}`}>
-                {inProgressOrders.map((order, index) => (
-                  <p key={index} className={`mb-5 text text_type_digits-default`}>
-                    {order}
+                {inProgressOrders.map((order) => (
+                  <p key={order._id} className={`mb-5 text text_type_digits-default`}>
+                    {order.number}
                   </p>
                 ))}
               </div>

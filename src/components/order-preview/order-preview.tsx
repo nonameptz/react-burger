@@ -1,14 +1,13 @@
 import orderPreviewStyles from "./order-preview.module.css";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from '../../types/dispatch';
 import {useHistory, useLocation} from "react-router-dom";
 import React, {FC, useEffect, useState} from "react";
 import {
-  IBurgerStore,
-  IRootStore,
   TOrderPreview
 } from "../../types/store";
 import {getIngredient} from "../../utils/getIngredient";
 import {CurrencyIcon} from "@ya.praktikum/react-developer-burger-ui-components";
+import { setSelectedOrder } from "../../services/reducers/orders";
 
 interface IOrderPreviewProps {
   urlPrefix: string
@@ -18,7 +17,8 @@ interface IOrderPreviewProps {
 const OrderPreview:FC<IOrderPreviewProps> = ({urlPrefix, order}) => {
   const history = useHistory();
   const location = useLocation();
-  const {ingredients: ingredientsList, isLoaded} = useSelector<IRootStore, IBurgerStore>(store => store.burger);
+  const dispatch = useDispatch();
+  const {ingredients: ingredientsList, isLoaded} = useSelector(store => store.burger);
   const [ingredients, setIngredients] = useState<string[]>([]);
   const [moreIngredients, setMoreIngredients] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -38,6 +38,7 @@ const OrderPreview:FC<IOrderPreviewProps> = ({urlPrefix, order}) => {
     setIngredients(ingredients.slice(0, 6))
   }
   const onFeedClick = (feedId:number):void => {
+    dispatch(setSelectedOrder(feedId));
     history.push({
       pathname: urlPrefix + feedId,
       state: { background: location }

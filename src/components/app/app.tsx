@@ -24,7 +24,7 @@ import IngredientsDetails from '../ingredient-details/ingredient-details'
 import FeedDetails from '../feed-details/feed-details'
 import {fetchBurgers, unselectIngredient} from '../../services/reducers/burger';
 import Modal from '../modal/modal';
-import {useDispatch} from '../../types/dispatch';
+import {useDispatch, useSelector} from '../../types/dispatch';
 import {useEffect} from 'react';
 import {Location} from "history";
 
@@ -39,10 +39,7 @@ function ModalSwitch() {
   const location = useLocation<ILocation>();
   const history = useHistory();
   const background = location.state && location.state.background;
-  let id = '';
-  if (background) {
-    id = location.pathname.split(location.state?.background?.pathname + '/')[1];
-  }
+  const {selectedOrder} = useSelector(store => store.orders)
 
   const handleModalClose = () => {
     dispatch(unselectIngredient())
@@ -101,7 +98,7 @@ function ModalSwitch() {
           <Route
             path='/feed/:id'
             children={
-            <Modal header={`#${id}`} onClose={handleModalClose}>
+            <Modal header={`#${selectedOrder}`} onClose={handleModalClose}>
               <FeedDetails isPrivate={false} />
             </Modal>
           }
@@ -109,7 +106,7 @@ function ModalSwitch() {
           <Route
             path='/profile/orders/:id'
             children={
-            <Modal header={`#${id}`} onClose={handleModalClose}>
+            <Modal header={`#${selectedOrder}`} onClose={handleModalClose}>
               <FeedDetails isPrivate={true} />
             </Modal>
           }

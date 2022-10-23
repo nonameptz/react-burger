@@ -3,7 +3,7 @@ import {getIngredient} from "./getIngredient";
 import {inititalOrder} from "./initStates";
 type TIngAmountData = {
   [id:string]: IIngredient & {
-    amount?: number;
+    amount: number;
   }
 }
 export const getOrder = (orders:Array<TOrderPreview>, id:number, ingredients:IIngredientsList):TOrderPreview => {
@@ -11,14 +11,12 @@ export const getOrder = (orders:Array<TOrderPreview>, id:number, ingredients:IIn
   if (order) {
     let total = 0;
     let ingredientsList:TIngAmountData = {};
-    order.ingredients.forEach((id,index,array) => {
+    order.ingredients.forEach((id) => {
       let ing = getIngredient(ingredients, id);
       total += ing.price;
       if (!ingredientsList[id]) {
-        ingredientsList[id] = {...ing};
-        ingredientsList[id].amount = 1;
+        ingredientsList[id] = {...ing, amount: 1};
       } else {
-        // @ts-ignore
         ingredientsList[id].amount += 1;
       }
     });

@@ -11,8 +11,8 @@ const FeedList:FC<IFeedListProps> = ({urlPrefix, orderList}) => {
   return (
     <div className={`${feedListStyles.orders} flex`}>
       <div className={`${feedListStyles.ordersList} scroll`}>
-        {orderList.map((order, key) => (
-          <OrderPreview key={key} order={order} urlPrefix={urlPrefix} />
+        {orderList.map((order) => (
+          <OrderPreview key={order._id} order={order} urlPrefix={urlPrefix} />
         ))}
       </div>
     </div>

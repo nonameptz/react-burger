@@ -1,11 +1,10 @@
 import orderDetailsStyles from "./order-details.module.css";
 import {CheckMarkIcon} from "@ya.praktikum/react-developer-burger-ui-components";
-import {useSelector} from "react-redux";
-import {IRootStore} from "../../types/store";
+import {useSelector} from '../../types/dispatch';
 import {FC} from "react";
 
 const OrderDetails:FC = () => {
-  const orderNum = useSelector<IRootStore, number>(store => store.burger.orderNum);
+  const orderNum = useSelector(store => store.burger.orderNum);
   return (
     <div className={`${orderDetailsStyles.order} flex`}>
       <p className="text text_type_digits-large mt-10">{orderNum}</p>

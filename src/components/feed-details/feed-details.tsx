@@ -1,12 +1,7 @@
 import feedDetailsStyles from "./feed-details.module.css";
-import {useSelector} from "react-redux";
+import {useSelector} from '../../types/dispatch';
 import {useParams} from "react-router-dom";
 import React, {FC} from "react";
-import {
-  IBurgerStore,
-  IOrdersStore,
-  IRootStore
-} from "../../types/store";
 import {getOrder} from "../../utils/getOrder";
 import IngredientPreview from "../ingredient-preview/ingredient-preview";
 import ingredientPreviewStyles
@@ -22,8 +17,8 @@ type TFeedProps = {
 
 const FeedDetails:FC<TFeedProps> = ({isPrivate = false}) => {
   const { id } = useParams<TFeedParams>();
-  const { allOrderList, orderList } = useSelector<IRootStore, IOrdersStore>(store => store.orders);
-  const {ingredients} = useSelector<IRootStore, IBurgerStore>(store => store.burger);
+  const { allOrderList, orderList } = useSelector(store => store.orders);
+  const {ingredients} = useSelector(store => store.burger);
 
   console.log(allOrderList, orderList);
 

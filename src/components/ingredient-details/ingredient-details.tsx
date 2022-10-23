@@ -3,7 +3,6 @@ import {useDispatch, useSelector} from '../../types/dispatch';
 import {useParams} from "react-router-dom";
 import {selectIngredient} from "../../services/reducers/burger";
 import {FC, useEffect} from "react";
-import {IBurgerStore} from "../../types/store";
 
 type TIngredientParams = {
   id: string;
@@ -12,7 +11,7 @@ type TIngredientParams = {
 const IngredientDetails:FC = () => {
   const dispatch = useDispatch();
   const { id } = useParams<TIngredientParams>();
-  const { selectedIngredient: ingredient,  isLoaded } = useSelector<IBurgerStore>(store => store.burger);
+  const { selectedIngredient: ingredient,  isLoaded } = useSelector(store => store.burger);
   useEffect(() => {
     if (isLoaded && (!ingredient || ingredient.name === '')) {
       dispatch(selectIngredient({id} ))

@@ -2,8 +2,7 @@ import React, {useState, useEffect, FC} from 'react';
 import burgerIngredientsStyles from './burger-ingredients.module.css';
 import { Tab as TabUI } from "@ya.praktikum/react-developer-burger-ui-components";
 import IngredientList from "./ingredient-list/ingredient-list";
-import { useSelector } from "react-redux";
-import {IIngredientsList, IRootStore} from "../../types/store";
+import { useSelector } from '../../types/dispatch';
 
 const Tab: React.FC<{
   active: boolean;
@@ -13,7 +12,7 @@ const Tab: React.FC<{
 }> = TabUI;
 
 const BurgerIngredients:FC = () => {
-  const ingredients = useSelector<IRootStore, IIngredientsList>(store => store.burger.ingredients);
+  const ingredients = useSelector(store => store.burger.ingredients);
   const [currentTab, setCurrentTab] = useState<string>('one');
   const [offsets, setOffsets] = useState<number[]>([]);
 

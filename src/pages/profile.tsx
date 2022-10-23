@@ -6,7 +6,6 @@ import {ProfileInfo} from "../components/profile-info/profile-info";
 import {logout} from "../services/reducers/auth";
 import {useDispatch, useSelector} from '../types/dispatch';
 import FeedList from "../components/feed-list/feed-list";
-import {IOrdersStore} from "../types/store";
 import {
   WS_ORDERS_CONNECTION_CLOSED,
   WS_ORDERS_CONNECTION_START
@@ -21,7 +20,7 @@ const Tab: React.FC<{
 }> = TabUI;
 
 export const ProfilePage:FC = () => {
-  const { orderList } = useSelector<IOrdersStore>(store => store.orders);
+  const { orderList } = useSelector(store => store.orders);
   const dispatch = useDispatch();
   const history = useHistory();
   const { path } = useRouteMatch();

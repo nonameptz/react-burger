@@ -12,7 +12,7 @@ import { addBun, addIngredient, removeIngredient, setOrder } from '../../service
 import {useDrop} from "react-dnd";
 import SortableConstructorElement from "./sortable-constructor-element";
 import {useHistory} from "react-router-dom";
-import {IBurgerStore, IIngredient} from "../../types/store";
+import {IIngredient} from "../../types/store";
 
 interface DragItem {
   index: number
@@ -29,8 +29,8 @@ const BurgerConstructor:FC = () => {
     constructorBun,
     totalPrice,
     orderLoading
-  } = useSelector<IBurgerStore>(store => store.burger);
-  const isLoggedIn = useSelector<boolean>(store => store.auth.isLoggedIn);
+  } = useSelector(store => store.burger);
+  const isLoggedIn = useSelector(store => store.auth.isLoggedIn);
   const dispatch = useDispatch();
 
   const [, dropBunTarget] = useDrop<

@@ -3,8 +3,8 @@ import API_DOMAIN from "../../constants/apiConstant";
 import { initialState, initSelectedIngredientState } from '../../utils/initStates';
 import { v4 as uuidv4 } from 'uuid';
 import checkResponse from '../../utils/checkResponse';
-import {getCookie} from "../../utils/cookie";
-import {refreshToken} from "./auth";
+import {getCookie, setCookie} from "../../utils/cookie";
+import {refreshTokenRequest} from "./auth";
 import {IIngredient} from "../../types/store";
 import {getIngredient} from "../../utils/getIngredient";
 
@@ -44,8 +44,12 @@ export const setOrder = createAsyncThunk(
       return data.order.number;
     } catch (error:any) {
       if (error.message === 'jwt expired') {
-        // @ts-ignore
-        thunkApi.dispatch(refreshToken(setOrder(ingredients)));
+        refreshTokenRequest()
+          .then((res) => {
+            localStorage.setItem('refreshToken', res.refreshToken);
+            setCookie('accessToken', res.accessToken, 2);
+            thunkApi.dispatch(setOrder(ingredients));
+          })
       }
       return thunkApi.rejectWithValue({
         message: 'Ошибка отправки заказа. Попробуйте снова.'

@@ -65,6 +65,7 @@ export const inititalOrder = {
 export const initialOrderState = {
   allOrderList: [inititalOrder],
   orderList: [inititalOrder],
+  selectedOrder: 0,
   total: 0,
   totalToday: 0,
 };

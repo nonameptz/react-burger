@@ -4,11 +4,10 @@ import Button from "../button/button";
 import {getUser, setUser} from "../../services/reducers/auth";
 import {useDispatch, useSelector} from '../../types/dispatch';
 import {TProfileInfoForm, useForm} from "../../hooks/useForm";
-import {IAuthStore} from "../../types/store";
 
 export const ProfileInfo:FC = () => {
   const dispatch = useDispatch();
-  const { name, email } = useSelector<IAuthStore>(store => store.auth);
+  const { name, email } = useSelector(store => store.auth);
 
   const {values, handleChange} = useForm<TProfileInfoForm>({
     name,
