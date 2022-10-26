@@ -4,14 +4,18 @@ export function getCookie(cname:string):string {
   let ca = decodedCookie.split(';');
   for(let i = 0; i <ca.length; i++) {
     let c = ca[i];
-    while (c.charAt(0) == ' ') {
+    while (c.charAt(0) === ' ') {
       c = c.substring(1);
     }
-    if (c.indexOf(name) == 0) {
+    if (c.indexOf(name) === 0) {
       return c.substring(name.length, c.length);
     }
   }
   return "";
+}
+
+export function getCleanCookie(cname:string):string {
+  return getCookie(cname).split('Bearer ')[1] || '';
 }
 
 export function setCookie(cname:string, cvalue:string, exdays:number) {

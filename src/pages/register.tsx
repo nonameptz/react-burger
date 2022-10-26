@@ -6,7 +6,7 @@ import {
 import Button from "../components/button/button";
 import { register } from '../services/reducers/auth';
 import commonStyles from "./common.module.css";
-import {useDispatch} from "react-redux";
+import {useDispatch} from '../types/dispatch';
 
 export const RegisterPage:FC = () => {
   const history = useHistory();
@@ -25,7 +25,6 @@ export const RegisterPage:FC = () => {
   }, [name, email, password])
 
   const onRegiserClick = () => {
-    //@ts-ignore
     dispatch(register({name, email, password}));
     history.replace({ pathname: '/login' });
   }

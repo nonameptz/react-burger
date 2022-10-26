@@ -3,8 +3,10 @@ import API_DOMAIN from "../../constants/apiConstant";
 import { initialState, initSelectedIngredientState } from '../../utils/initStates';
 import { v4 as uuidv4 } from 'uuid';
 import checkResponse from '../../utils/checkResponse';
-import {getCookie} from "../../utils/cookie";
-import {refreshToken} from "./auth";
+import {getCookie, setCookie} from "../../utils/cookie";
+import {refreshTokenRequest} from "./auth";
+import {IIngredient} from "../../types/store";
+import {getIngredient} from "../../utils/getIngredient";
 
 export const fetchBurgers = createAsyncThunk(
   'burger/fetch',
@@ -27,7 +29,7 @@ export const fetchBurgers = createAsyncThunk(
 
 export const setOrder = createAsyncThunk(
   'burger/order',
-  async (ingredients, thunkApi) => {
+  async (ingredients:string[], thunkApi) => {
     try {
       const token = getCookie('accessToken');
       const response = await fetch(`${API_DOMAIN}api/orders`, {
@@ -40,9 +42,14 @@ export const setOrder = createAsyncThunk(
       });
       const data = await checkResponse(response);
       return data.order.number;
-    } catch (error) {
+    } catch (error:any) {
       if (error.message === 'jwt expired') {
-        thunkApi.dispatch(refreshToken(setOrder(ingredients)));
+        refreshTokenRequest()
+          .then((res) => {
+            localStorage.setItem('refreshToken', res.refreshToken);
+            setCookie('accessToken', res.accessToken, 2);
+            thunkApi.dispatch(setOrder(ingredients));
+          })
       }
       return thunkApi.rejectWithValue({
         message: 'Ошибка отправки заказа. Попробуйте снова.'
@@ -51,7 +58,7 @@ export const setOrder = createAsyncThunk(
   }
 );
 
-const increaseCounter = (ingredients, id) => {
+const increaseCounter = (ingredients:Array<IIngredient>, id:string):void => {
   ingredients.map((ingredient) => {
     if (ingredient._id === id) {
       ingredient.counter = ingredient.counter > 0
@@ -61,7 +68,7 @@ const increaseCounter = (ingredients, id) => {
     return ingredient;
   });
 }
-const decreaseCounter = (ingredients, id) => {
+const decreaseCounter = (ingredients:Array<IIngredient>, id:string):void => {
   ingredients.map((ingredient) => {
     if (ingredient._id === id) {
       ingredient.counter = ingredient.counter - 1;
@@ -70,11 +77,12 @@ const decreaseCounter = (ingredients, id) => {
   });
 }
 
+
 export const burgerSlice = createSlice({
   name: 'burger',
   initialState,
   reducers: {
-    addBun: (state, action) => {
+    addBun: (state = initialState, action) => {
       if (state.constructorBun.price) {
         state.totalPrice -= 2 * state.constructorBun.price;
         decreaseCounter(state.ingredients.buns, state.constructorBun._id);
@@ -94,7 +102,7 @@ export const burgerSlice = createSlice({
         uuid: uuidv4(),
       });
     },
-    removeIngredient: (state, action) => {
+    removeIngredient: (state= initialState, action) => {
       state.totalPrice -= state.constructorList[action.payload].price;
       decreaseCounter(
         [...state.ingredients.sauces, ...state.ingredients.mains],
@@ -103,12 +111,10 @@ export const burgerSlice = createSlice({
       state.constructorList.splice(action.payload, 1);
     },
     selectIngredient: (state, action) => {
-      const findIng = [
-        ...state.ingredients.buns,
-        ...state.ingredients.sauces,
-        ...state.ingredients.mains,
-      ].find(ingredient => ingredient._id === action.payload.id);
-      state.selectedIngredient = findIng;
+      const findIng = getIngredient(state.ingredients, action.payload.id);
+      if (findIng !== undefined) {
+        state.selectedIngredient = findIng;
+      }
     },
     unselectIngredient: (state) => {
       state.selectedIngredient = initSelectedIngredientState;
@@ -128,14 +134,16 @@ export const burgerSlice = createSlice({
       state.isError = false;
     })
     .addCase(fetchBurgers.fulfilled, (state, action) => {
-      state.ingredients = action.payload;
-      state.isLoaded = true;
-      state.isLoading = false;
+      if (action.payload !== undefined) {
+        state.ingredients = action.payload;
+        state.isLoaded = true;
+        state.isLoading = false;
+      }
     })
     .addCase(fetchBurgers.rejected, (state, action) => {
       state.isLoading = false;
       state.isError = true;
-      if (action.payload) {
+      if (typeof action.payload === 'string') {
         state.errorMsg = action.payload;
       }
     })
@@ -162,8 +170,8 @@ export const burgerSlice = createSlice({
       })
       .addCase(setOrder.rejected, (state, action) => {
         state.orderLoading = false;
-        state.orderNum = null;
-        if (action.payload) {
+        state.orderNum = 0;
+        if (typeof action.payload === 'string') {
           state.orderErrorMsg = action.payload;
         }
       })

@@ -16,9 +16,13 @@ const AppHeader = () => {
     strict: true
   });
   const isConstructorPage = rootMatch?.isExact || false;
+  const isFeedPage = !!useRouteMatch("/feed");
   const isProfilePage = !!useRouteMatch("/profile");
   const onConstructorClick = () => {
     history.replace({pathname: '/'});
+  }
+  const onFeedClick = () => {
+    history.replace({pathname: '/feed'});
   }
   const onProfileClick = () => {
     history.replace({pathname: '/profile'});
@@ -34,8 +38,9 @@ const AppHeader = () => {
         />
         <NavButton
           title='Лента заказов'
-          isActive={false}
-          icon={(<ListIcon type={'secondary'} />)}
+          isActive={isFeedPage}
+          icon={(<ListIcon type={`${isFeedPage ? 'primary' : 'secondary'}`} />)}
+          onClick={onFeedClick}
         />
       </nav>
       <div className={`${appHeaderStyles.width33} ${appHeaderStyles.justifyCenter}`}>

@@ -1,0 +1,29 @@
+.order {
+    flex-direction: column;
+}
+
+.consist {
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.status {
+    color: #00cccc;
+}
+
+.ordersList {
+    width: 100%;
+    height: 370px;
+    overflow-y: scroll;
+    padding-right: 10px;
+}
+
+.box {
+    text-align: center;
+}
+
+.footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}

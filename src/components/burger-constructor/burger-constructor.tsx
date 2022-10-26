@@ -1,4 +1,4 @@
-import {FC, SyntheticEvent, useState} from 'react';
+import {FC, useState} from 'react';
 import {
   ConstructorElement,
   CurrencyIcon
@@ -7,12 +7,12 @@ import Button from "../button/button";
 import burgerConstructorStyles from './burger-constructor.module.css';
 import Modal from "../modal/modal";
 import OrderDetails from "../order-details/order-details";
-import {useSelector, useDispatch} from "react-redux";
+import {useSelector, useDispatch} from '../../types/dispatch';
 import { addBun, addIngredient, removeIngredient, setOrder } from '../../services/reducers/burger';
 import {useDrop} from "react-dnd";
 import SortableConstructorElement from "./sortable-constructor-element";
 import {useHistory} from "react-router-dom";
-import {IBurgerStore, IIngredient, IRootStore} from "../../types/store";
+import {IIngredient} from "../../types/store";
 
 interface DragItem {
   index: number
@@ -29,8 +29,8 @@ const BurgerConstructor:FC = () => {
     constructorBun,
     totalPrice,
     orderLoading
-  } = useSelector<IRootStore, IBurgerStore>(store => store.burger);
-  const isLoggedIn = useSelector<IRootStore, boolean>(store => store.auth.isLoggedIn);
+  } = useSelector(store => store.burger);
+  const isLoggedIn = useSelector(store => store.auth.isLoggedIn);
   const dispatch = useDispatch();
 
   const [, dropBunTarget] = useDrop<
@@ -61,7 +61,6 @@ const BurgerConstructor:FC = () => {
     if (isLoggedIn) {
       const ingredients = [constructorBun, ...constructorList, constructorBun]
         .map((current) => current["_id"])
-      //@ts-ignore
       dispatch(setOrder(ingredients));
       setIsModalVisible(true);
     } else {

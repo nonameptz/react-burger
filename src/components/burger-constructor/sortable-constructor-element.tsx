@@ -5,7 +5,7 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useDrag, useDrop } from "react-dnd";
 import {FC, useRef} from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch } from '../../types/dispatch';
 import { sortConstructorElements } from '../../services/reducers/burger';
 import {IIngredient} from "../../types/store";
 

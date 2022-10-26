@@ -1,10 +1,16 @@
-import React, {FC, useCallback} from 'react';
+import React, {FC, useCallback, useEffect} from 'react';
 import {Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
 import {Tab as TabUI} from "@ya.praktikum/react-developer-burger-ui-components";
 import profileStyles from './profile.module.css';
 import {ProfileInfo} from "../components/profile-info/profile-info";
 import {logout} from "../services/reducers/auth";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from '../types/dispatch';
+import FeedList from "../components/feed-list/feed-list";
+import {
+  WS_ORDERS_CONNECTION_CLOSED,
+  WS_ORDERS_CONNECTION_START
+} from "../types/actionTypes";
+import {getCleanCookie} from "../utils/cookie";
 
 const Tab: React.FC<{
   active: boolean;
@@ -14,9 +20,17 @@ const Tab: React.FC<{
 }> = TabUI;
 
 export const ProfilePage:FC = () => {
+  const { orderList } = useSelector(store => store.orders);
   const dispatch = useDispatch();
   const history = useHistory();
   const { path } = useRouteMatch();
+  useEffect(() => {
+    const payload = `?token=${getCleanCookie('accessToken')}`;
+    dispatch({ type: WS_ORDERS_CONNECTION_START, payload });
+    return () => {
+      dispatch({ type: WS_ORDERS_CONNECTION_CLOSED });
+    }
+  }, []);
   const selectProfileTab = useCallback(
     () => {
       history.replace({ pathname: '/profile' });
@@ -31,7 +45,6 @@ export const ProfilePage:FC = () => {
   );
 
   const onLogoutClick = async () => {
-    //@ts-ignore
     await dispatch(logout());
     history.push({ pathname: '/login' });
   }
@@ -59,7 +72,7 @@ export const ProfilePage:FC = () => {
             <ProfileInfo />
           </Route>
           <Route path="/profile/orders" exact={true}>
-            TBD: Orders will be here
+            <FeedList urlPrefix='/profile/orders/' orderList={orderList} />
           </Route>
         </Switch>
       </div>

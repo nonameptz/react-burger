@@ -2,7 +2,7 @@ import { useHistory } from 'react-router-dom';
 import { Input } from "@ya.praktikum/react-developer-burger-ui-components";
 import Button from "../components/button/button";
 import commonStyles from "./common.module.css";
-import {useDispatch} from "react-redux";
+import {useDispatch} from '../types/dispatch'
 import { forgetPassword } from "../services/reducers/auth";
 import {useForm} from "../hooks/useForm";
 import {FC, SyntheticEvent} from "react";
@@ -15,8 +15,7 @@ export const ForgotPasswordPage:FC = () => {
   });
   const onSubmit = async (e:SyntheticEvent) => {
     e.preventDefault();
-    //@ts-ignore
-    const result = await dispatch(forgetPassword(values))
+    const result = await dispatch(forgetPassword(values.email))
     if (result.payload === true) {
       history.push({
         pathname: '/reset-password',

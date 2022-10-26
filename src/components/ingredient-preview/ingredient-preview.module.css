@@ -1,0 +1,23 @@
+.ingredient {
+    flex-direction: row;
+    justify-content: space-between;
+}
+.leftPanel {
+    align-items: center;
+}
+.ingredientPreview {
+    position: relative;
+    width: 74px !important;
+    height: 74px !important;
+    border-radius: 50%;
+    border: 2px #801ab3 solid;
+}
+.ingredientPreviewImg {
+    scale: 85%;
+    position: absolute;
+    left: -34px;
+}
+.totalPrice {
+    flex-direction: row;
+    align-items: center;
+}

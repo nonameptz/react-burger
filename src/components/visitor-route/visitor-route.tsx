@@ -1,7 +1,6 @@
 import { Route, Redirect } from 'react-router-dom';
-import {useSelector} from "react-redux";
+import {useSelector} from '../../types/dispatch';
 import {FC} from "react";
-import {IRootStore} from '../../types/store';
 
 interface IVisitorRouteProps {
   path: string | string[];
@@ -10,7 +9,7 @@ interface IVisitorRouteProps {
 }
 
 const VisitorRoute: FC<IVisitorRouteProps> = ({ children, ...rest }) => {
-  const isLoggedIn = useSelector<IRootStore, boolean>(store => store.auth.isLoggedIn);
+  const isLoggedIn = useSelector(store => store.auth.isLoggedIn);
 
   return (
     <Route

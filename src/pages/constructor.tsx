@@ -1,4 +1,4 @@
-import {useSelector} from "react-redux";
+import {useSelector} from '../types/dispatch';
 import burgerWrapperStyles from "./constructor.module.css";
 import {DndProvider} from "react-dnd";
 import {HTML5Backend} from "react-dnd-html5-backend";
@@ -7,10 +7,9 @@ import BurgerIngredients
 import BurgerConstructor
   from "../components/burger-constructor/burger-constructor";
 import {FC} from "react";
-import {IBurgerStore, IRootStore} from "../types/store";
 
 export const ConstructorPage:FC = () => {
-  const { isError, isLoading, isLoaded, errorMsg } = useSelector<IRootStore, IBurgerStore>(store => store.burger);
+  const { isError, isLoading, isLoaded, errorMsg } = useSelector(store => store.burger);
 
   if (!isLoaded) {
     return null;

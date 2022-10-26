@@ -12,16 +12,19 @@ import {
   LoginPage,
   NotFound404,
   ProfilePage,
-  IngredientPage
+  IngredientPage,
+  FeedPage,
+  FeedListPage
 } from "../../pages";
 import appStyles from './app.module.css';
 import AppHeader from '../app-header/app-header';
 import ProtectedRoute from '../protected-route/protected-route';
 import VisitorRoute from '../visitor-route/visitor-route';
 import IngredientsDetails from '../ingredient-details/ingredient-details'
+import FeedDetails from '../feed-details/feed-details'
 import {fetchBurgers, unselectIngredient} from '../../services/reducers/burger';
 import Modal from '../modal/modal';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from '../../types/dispatch';
 import {useEffect} from 'react';
 import {Location} from "history";
 
@@ -36,6 +39,7 @@ function ModalSwitch() {
   const location = useLocation<ILocation>();
   const history = useHistory();
   const background = location.state && location.state.background;
+  const {selectedOrder} = useSelector(store => store.orders)
 
   const handleModalClose = () => {
     dispatch(unselectIngredient())
@@ -49,6 +53,15 @@ function ModalSwitch() {
         <Route path="/" exact={true}>
           <ConstructorPage />
         </Route>
+        <Route path={["/feed"]} exact={true}>
+          <FeedListPage />
+        </Route>
+        <Route path="/feed/:id" exact={true}>
+          <FeedPage isPrivate={false} />
+        </Route>
+        <ProtectedRoute path="/profile/orders/:id" exact={true}>
+          <FeedPage isPrivate={true} />
+        </ProtectedRoute>
         <VisitorRoute path="/login" exact={true}>
           <LoginPage />
         </VisitorRoute>
@@ -61,7 +74,7 @@ function ModalSwitch() {
         <VisitorRoute path="/reset-password" exact={true}>
           <ResetPasswordPage />
         </VisitorRoute>
-        <ProtectedRoute path={["/profile","/profile/orders"]} exact={true}>
+        <ProtectedRoute path={["/profile","/profile/orders","/profile/orders/:id"]} exact={true}>
           <ProfilePage />
         </ProtectedRoute>
         <Route path="/ingredients/:id" exact={true}>
@@ -73,14 +86,32 @@ function ModalSwitch() {
       </Switch>
 
       {background && (
-        <Route
-          path='/ingredients/:id'
-          children={
-            <Modal header='Детали ингредиента' onClose={handleModalClose}>
-              <IngredientsDetails />
+        <>
+          <Route
+            path='/ingredients/:id'
+            children={
+              <Modal header='Детали ингредиента' onClose={handleModalClose}>
+                <IngredientsDetails />
+              </Modal>
+            }
+          />
+          <Route
+            path='/feed/:id'
+            children={
+            <Modal header={`#${selectedOrder}`} onClose={handleModalClose}>
+              <FeedDetails isPrivate={false} />
             </Modal>
           }
-        />
+          />
+          <Route
+            path='/profile/orders/:id'
+            children={
+            <Modal header={`#${selectedOrder}`} onClose={handleModalClose}>
+              <FeedDetails isPrivate={true} />
+            </Modal>
+          }
+          />
+        </>
       )}
     </>
   );
@@ -90,7 +121,6 @@ const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    //@ts-ignore
     dispatch(fetchBurgers());
   }, []);
   return (

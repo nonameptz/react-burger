@@ -1,7 +1,7 @@
 import ingredientListStyles from './ingredient-list.module.css';
 import Ingredient from "../ingredient/ingredient";
 import { selectIngredient } from '../../../services/reducers/burger';
-import {useDispatch} from "react-redux";
+import {useDispatch} from '../../../types/dispatch'
 import {useHistory, useLocation} from "react-router-dom";
 import {IIngredient} from "../../../types/store";
 import {FC} from "react";
