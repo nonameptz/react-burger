@@ -93,8 +93,8 @@ const BurgerConstructor:FC = () => {
 
   return (
     <section className={`mt-25 mb-10 ml-10 pl-4 pr-4 flex ${burgerConstructorStyles.burgerConstructor}`}>
-      <div ref={dropBunTarget}>
-        <div ref={dropIngredientTarget}>
+      <div ref={dropBunTarget} data-testid='drop_area_bun'>
+        <div ref={dropIngredientTarget} data-testid='drop_area_ingredients'>
             <div className='ml-8'>
               {constructorBun.name && (<ConstructorElement
                 type="top"
@@ -137,9 +137,15 @@ const BurgerConstructor:FC = () => {
             {totalPrice}
             <CurrencyIcon type="primary" />
           </p>
-          <Button type="primary" size="large" onClick={onOrderClick} disabled={(!constructorBun.name || orderLoading)}>
-            {orderLoading ? 'Оформляем...' : 'Оформить заказ'}
-          </Button>
+          <div data-testid='button-order-burger'>
+            <Button
+              type="primary"
+              size="large"
+              onClick={onOrderClick}
+              disabled={(!constructorBun.name || orderLoading)}>
+              {orderLoading ? 'Оформляем...' : 'Оформить заказ'}
+            </Button>
+          </div>
         </div>
         {isModalVisible && !orderLoading && modal}
     </section>

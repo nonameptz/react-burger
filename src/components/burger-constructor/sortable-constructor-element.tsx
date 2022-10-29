@@ -90,6 +90,7 @@ const SortableConstructorElement:FC<ISortableConstructorElement> = ({index, elem
     <div className={`flex pl-2 ${burgerConstructorStyles.constructorElement}`}
          style={{ opacity }}
          ref={dragDropSortRef}
+         data-testid={`droppable_element_${index}`}
          data-handler-id={index}>
       <DragIcon type="primary" />
       <ConstructorElement

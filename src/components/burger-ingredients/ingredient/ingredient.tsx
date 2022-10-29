@@ -26,6 +26,7 @@ const Ingredient: FunctionComponent<IngredientProps> = (
   return (
     <div className={`flex ${ingredientStyles.ingredient} mb-10 ${index % 2 === 0 ? 'mr-6' : ''}`}
          ref={dragRef}
+         data-testid={`draggable_element_${type}_${index}`}
          onClick={onClick}>
       {counter > 0 && (<Counter count={counter} size="default" />)}
       <img src={image} alt={name} className={ingredientStyles.ingredientImage} />
