@@ -239,7 +239,7 @@ export const authSlice = createSlice({
       .addCase(logout.pending, (state) => {
         state.isError = false;
       })
-      .addCase(logout.fulfilled, (state, action) => {
+      .addCase(logout.fulfilled, (state) => {
         state.name = initialState.name;
         state.email = initialState.email;
         localStorage.removeItem('refreshToken');
@@ -255,40 +255,40 @@ export const authSlice = createSlice({
         }
       });
 
-      builder
-        .addCase(getUser.pending, (state) => {
-          state.isError = false;
-        })
-        .addCase(getUser.fulfilled, (state, action:{payload:any}) => {
-          state.name = action.payload.user.name;
-          state.email = action.payload.user.email;
-          state.isLoggedIn = true;
-          state.isError = false;
-          state.errorMsg = '';
-        })
-        .addCase(getUser.rejected, (state, action:{payload:any}) => {
-          state.isError = true;
-          if (action.payload?.message) {
-            state.errorMsg = action.payload?.message;
-          }
-        });
+    builder
+      .addCase(getUser.pending, (state) => {
+        state.isError = false;
+      })
+      .addCase(getUser.fulfilled, (state, action:{payload:any}) => {
+        state.name = action.payload.user.name;
+        state.email = action.payload.user.email;
+        state.isLoggedIn = true;
+        state.isError = false;
+        state.errorMsg = '';
+      })
+      .addCase(getUser.rejected, (state, action:{payload:any}) => {
+        state.isError = true;
+        if (action.payload?.message) {
+          state.errorMsg = action.payload?.message;
+        }
+      });
 
-      builder
-        .addCase(setUser.pending, (state) => {
-          state.isError = false;
-        })
-        .addCase(setUser.fulfilled, (state, action:{payload:any}) => {
-          state.name = action.payload.user.name;
-          state.email = action.payload.user.email;
-          state.isError = false;
-          state.errorMsg = '';
-        })
-        .addCase(setUser.rejected, (state, action:{payload:any}) => {
-          state.isError = true;
-          if (action.payload?.message) {
-            state.errorMsg = action.payload?.message;
-          }
-        });
+    builder
+      .addCase(setUser.pending, (state) => {
+        state.isError = false;
+      })
+      .addCase(setUser.fulfilled, (state, action:{payload:any}) => {
+        state.name = action.payload.user.name;
+        state.email = action.payload.user.email;
+        state.isError = false;
+        state.errorMsg = '';
+      })
+      .addCase(setUser.rejected, (state, action:{payload:any}) => {
+        state.isError = true;
+        if (action.payload?.message) {
+          state.errorMsg = action.payload?.message;
+        }
+      });
 }})
 
 export const { setStateUserName, setStateEmail } = authSlice.actions

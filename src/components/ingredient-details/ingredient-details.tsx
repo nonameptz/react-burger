@@ -21,7 +21,8 @@ const IngredientDetails:FC = () => {
     return null;
   }
   return (
-    <div className={`${ingredientDetailsStyles.order} flex`}>
+    <div className={`${ingredientDetailsStyles.order} flex`}
+         data-testid='ingredients-modal'>
       <img src={ingredient.image_large} alt={ingredient.name} />
       <p className="text text_type_main-medium mt-4">
         {ingredient.name}

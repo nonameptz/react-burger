@@ -129,24 +129,24 @@ export const burgerSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-    .addCase(fetchBurgers.pending, (state) => {
-      state.isLoading = true;
-      state.isError = false;
-    })
-    .addCase(fetchBurgers.fulfilled, (state, action) => {
-      if (action.payload !== undefined) {
-        state.ingredients = action.payload;
-        state.isLoaded = true;
+      .addCase(fetchBurgers.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+      })
+      .addCase(fetchBurgers.fulfilled, (state, action) => {
+        if (action.payload !== undefined) {
+          state.ingredients = action.payload;
+          state.isLoaded = true;
+          state.isLoading = false;
+        }
+      })
+      .addCase(fetchBurgers.rejected, (state, action) => {
         state.isLoading = false;
-      }
-    })
-    .addCase(fetchBurgers.rejected, (state, action) => {
-      state.isLoading = false;
-      state.isError = true;
-      if (typeof action.payload === 'string') {
-        state.errorMsg = action.payload;
-      }
-    })
+        state.isError = true;
+        if (typeof action.payload === 'string') {
+          state.errorMsg = action.payload;
+        }
+      })
 
     builder
       .addCase(setOrder.pending, (state, action) => {
