@@ -1,7 +1,7 @@
 describe('Constructor Page - Modal', () => {
   beforeEach(() => {
     cy.intercept('GET', 'api/ingredients', {fixture: 'ingredients.json'});
-    cy.visit('http://localhost:3000/');
+    cy.visit('/');
   });
 
   it('Should open and close modal (esc) and have content', () => {

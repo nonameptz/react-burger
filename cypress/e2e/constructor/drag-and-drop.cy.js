@@ -1,7 +1,7 @@
 describe('Constructor Page - Drag and drop', () => {
   beforeEach(() => {
     cy.intercept('GET', 'api/ingredients', {fixture: 'ingredients.json'});
-    cy.visit('http://localhost:3000/');
+    cy.visit('/');
   });
 
   it('DnD from left to right should working correctly - buns first', () => {

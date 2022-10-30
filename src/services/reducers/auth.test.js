@@ -174,7 +174,7 @@ describe('Auth reducer', () => {
       ...state,
       name: 'name',
       email: 'email',
-      isLoggedIn: true,
+      isError: false,
     })
   })
   it('should setUser set status to "rejected"', async () => {

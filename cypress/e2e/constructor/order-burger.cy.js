@@ -10,7 +10,7 @@ describe('Constructor Page - order a burger', () => {
       JSON.stringify("test-refreshToken")
     );
     cy.setCookie('accessToken', 'test-accessToken')
-    cy.visit('http://localhost:3000/');
+    cy.visit('/');
   });
 
   afterEach(function () {

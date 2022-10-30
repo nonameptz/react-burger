@@ -2,6 +2,7 @@ import orderReducer, {
   addOrUpdateOrders, addOrUpdateAllOrders, setSelectedOrder
 } from './orders'
 import { initialOrderState } from '../../utils/initStates';
+import { orders } from './orders.mock.js'
 jest.mock('uuid', () => ({ v4: () => 'testid' }));
 
 describe('Orders reducer', () => {
@@ -20,48 +21,12 @@ describe('Orders reducer', () => {
   it('should add or update all orders', () => {
     const expectedState = {
       ...initialState,
-      allOrderList: [
-        {
-          ingredients: ['123', '456', '789'],
-          name: 'name',
-          status: 'status',
-          number: 1,
-          createdAt: '10/10/2022',
-          updatedAt: '10/12/2022',
-          _id: "testid",
-        },
-        {
-          ingredients: ['123', '456', '789'],
-          name: 'name',
-          status: 'status',
-          number: 2,
-          createdAt: '10/10/2022',
-          updatedAt: '10/12/2022',
-          _id: "testid",
-        }
-      ],
+      allOrderList: orders.map(order => ({ ...order, _id: 'testid'})),
       total: 10,
       totalToday: 1
     }
     const action = addOrUpdateAllOrders({
-      orders: [
-        {
-          ingredients: ['123', '456', '789'],
-          name: 'name',
-          status: 'status',
-          number: 1,
-          createdAt: '10/10/2022',
-          updatedAt: '10/12/2022',
-        },
-        {
-          ingredients: ['123', '456', '789'],
-          name: 'name',
-          status: 'status',
-          number: 2,
-          createdAt: '10/10/2022',
-          updatedAt: '10/12/2022',
-        }
-      ],
+      orders,
       total: 10,
       totalToday: 1,
     });
@@ -70,48 +35,13 @@ describe('Orders reducer', () => {
 
 
   it('should add or update orders', () => {
+    const orderList = [...orders].reverse().map(order => ({ ...order, _id: 'testid'}))
     const expectedState = {
       ...initialState,
-      orderList: [
-        {
-          ingredients: ['123', '456', '789'],
-          name: 'name',
-          status: 'status',
-          number: 2,
-          createdAt: '10/10/2022',
-          updatedAt: '10/12/2022',
-          _id: "testid",
-        },
-        {
-          ingredients: ['123', '456', '789'],
-          name: 'name',
-          status: 'status',
-          number: 1,
-          createdAt: '10/10/2022',
-          updatedAt: '10/12/2022',
-          _id: "testid",
-        },
-      ],
+      orderList,
     }
     const action = addOrUpdateOrders({
-      orders: [
-        {
-          ingredients: ['123', '456', '789'],
-          name: 'name',
-          status: 'status',
-          number: 1,
-          createdAt: '10/10/2022',
-          updatedAt: '10/12/2022',
-        },
-        {
-          ingredients: ['123', '456', '789'],
-          name: 'name',
-          status: 'status',
-          number: 2,
-          createdAt: '10/10/2022',
-          updatedAt: '10/12/2022',
-        }
-      ],
+      orders,
       total: 10,
       totalToday: 1,
     });
