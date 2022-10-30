@@ -6,6 +6,9 @@ This project was done in scope of course "React Developer" by Yandex Praktikum. 
 
 Login page, registration page and forget password pages were introduced during the project.
 
+Maybe you want to order some burgers? Here you should go:
+https://stellarburgers.nomoredomains.icu/
+
 In this project used those technologies:
  * React JS v18
  * React Router  
@@ -18,9 +21,30 @@ In this project used those technologies:
     * React DND (to work with drag and drop)
     * uuid - for generate unique ids
     * @ya.praktikum/react-developer-burger-ui-components - UI components library
+   
+---
+To run project locally you need to clone it:
+```bash
+git clone https://github.com/nonameptz/react-burger.git
+```
+and install dependencies:
+```bash
+npm install
+```
+After that, run project:
+```bash
+npm run start
+```
+---
 
-Maybe you want to order some burgers? Here you should go:
-https://stellarburgers.nomoredomains.icu/
+To run Cypress tests run:
+```bash
+npm run cypress
+```
+To run Unit tests run:
+```bash
+npm run test
+```
 
 ---
 
